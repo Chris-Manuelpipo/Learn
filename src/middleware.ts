@@ -1,19 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "@/lib/session";
-import { PALETTE_COOKIE, isPaletteName } from "@/lib/palettes";
 
 const PROTECTED = ["/dashboard", "/learn", "/my-courses", "/profile", "/checkout", "/badges", "/studio", "/admin", "/become-instructor", "/notes", "/review"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const palette = req.nextUrl.searchParams.get("palette");
-  if (isPaletteName(palette)) {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("palette");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(PALETTE_COOKIE, palette, { path: "/", maxAge: 60 * 60 * 24 * 365 });
-    return res;
-  }
   const session = await verifySession(req.cookies.get(SESSION_COOKIE)?.value);
 
   if (PROTECTED.some((p) => pathname === p || pathname.startsWith(p + "/"))) {

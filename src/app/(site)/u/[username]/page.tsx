@@ -38,7 +38,7 @@ export default async function PublicProfile({ params }: Props) {
 
   return (
     <div>
-      <div className="h-44 bg-gradient-to-r from-brand to-brand-2 sm:h-56" />
+      <div className="h-44 bg-gradient-to-r from-grad-a to-grad-b sm:h-56" />
       <Container>
         <div className="-mt-20 flex flex-col gap-5 sm:flex-row sm:items-end">
           <Avatar user={profile} size={144} ring className="shadow-xl" />
@@ -63,7 +63,7 @@ export default async function PublicProfile({ params }: Props) {
               <p className="font-display text-2xl font-extrabold">Niveau {level.level} <span className="text-brand">· {level.title}</span></p>
               <p className="text-sm font-bold text-muted">{formatNumber(profile.xp)} XP</p>
             </div>
-            <ProgressBar value={level.percent} className="mt-3" height={12} color="linear-gradient(90deg,var(--brand),var(--brand-2))" />
+            <ProgressBar value={level.percent} className="mt-3" height={12} color="linear-gradient(90deg,var(--grad-a),var(--grad-b))" />
           </div>
           <Stat emoji="🔥" value={profile.streak} label={`jours de série (record ${profile.bestStreak})`} />
           <Stat emoji="🎓" value={certs.length} label={`certificats · ${completed} cours terminés`} />

@@ -94,7 +94,7 @@ export function WeekBars({ days }: { days: Day[] }) {
               animate={{ height: `${Math.max(4, (d.xp / max) * 100)}%` }}
               transition={{ delay: i * 0.06, type: "spring", stiffness: 120, damping: 16 }}
               className="w-full max-w-12 rounded-t-xl rounded-b-md"
-              style={{ background: d.xp === 0 ? "var(--line)" : isToday ? "linear-gradient(180deg,var(--brand-2),var(--brand))" : "linear-gradient(180deg,color-mix(in srgb,var(--brand) 55%,white),var(--brand))" }}
+              style={{ background: d.xp === 0 ? "var(--line)" : isToday ? "linear-gradient(180deg,var(--grad-b),var(--grad-a))" : "linear-gradient(180deg,color-mix(in srgb,var(--brand) 55%,white),var(--brand))" }}
             />
             <span className={`text-xs font-extrabold capitalize ${isToday ? "text-brand" : "text-muted"}`}>
               {isToday ? "Auj." : formatDate(date, { weekday: "short" }).replace(".", "")}

@@ -2,7 +2,7 @@
 
 import * as DM from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
-import { Award, BookOpen, GraduationCap, LayoutDashboard, LogOut, NotebookPen, Settings, Shield, Sparkles, User } from "lucide-react";
+import { Award, BookOpen, GraduationCap, LayoutDashboard, LogOut, NotebookPen, Palette, Settings, Shield, Sparkles, User } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { ProgressBar } from "@/components/ui/progress";
 import { logout } from "@/app/actions/auth";
@@ -37,7 +37,7 @@ export function UserMenu({ user, level }: Props) {
                 {level.current}/{level.needed} XP
               </span>
             </div>
-            <ProgressBar value={level.percent} height={8} color="linear-gradient(90deg,var(--brand),var(--brand-2))" />
+            <ProgressBar value={level.percent} height={8} color="linear-gradient(90deg,var(--grad-a),var(--grad-b))" />
           </div>
           <DM.Item asChild><Link href="/dashboard" className={item}><LayoutDashboard className="h-4 w-4 text-muted" /> Tableau de bord</Link></DM.Item>
           <DM.Item asChild><Link href="/my-courses" className={item}><BookOpen className="h-4 w-4 text-muted" /> Mes cours</Link></DM.Item>
@@ -45,6 +45,7 @@ export function UserMenu({ user, level }: Props) {
           <DM.Item asChild><Link href="/badges" className={item}><Award className="h-4 w-4 text-muted" /> Badges & succès</Link></DM.Item>
           <DM.Item asChild><Link href="/notes" className={item}><NotebookPen className="h-4 w-4 text-muted" /> Mes notes</Link></DM.Item>
           <DM.Item asChild><Link href={`/u/${user.username}`} className={item}><User className="h-4 w-4 text-muted" /> Profil public</Link></DM.Item>
+          <DM.Item asChild><Link href="/profile#couleur" className={item}><Palette className="h-4 w-4 text-muted" /> Couleur d'accent</Link></DM.Item>
           <DM.Item asChild><Link href="/profile" className={item}><Settings className="h-4 w-4 text-muted" /> Paramètres</Link></DM.Item>
           <DM.Separator className="my-1.5 h-px bg-line" />
           {user.role !== "STUDENT" ? (

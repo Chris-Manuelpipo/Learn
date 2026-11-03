@@ -1,6 +1,5 @@
-import { cookies } from "next/headers";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { DEFAULT_PALETTE, PALETTES, PALETTE_COOKIE, isPaletteName } from "@/lib/palettes";
+import { DEFAULT_PALETTE, PALETTES, isPaletteName, type Tone } from "@/lib/palettes";
 import QRCode from "qrcode";
 import { getCertificate, verifyUrl } from "@/lib/certificate";
 import { formatDate, formatDuration } from "@/lib/utils";
@@ -22,15 +21,14 @@ export async function GET(_: Request, { params }: { params: Promise<{ code: stri
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
   const italic = await pdf.embedFont(StandardFonts.TimesRomanItalic);
-  const saved = (await cookies()).get(PALETTE_COOKIE)?.value;
-  const brand = PALETTES[isPaletteName(saved) ? saved : DEFAULT_PALETTE].light;
+  const brand: Tone = PALETTES[isPaletteName(cert.user.accentColor) ? cert.user.accentColor : DEFAULT_PALETTE].light;
   const ink = hex("#16161a");
   const muted = hex("#6e6a8a");
   const accent = hex(brand.ink);
 
   page.drawRectangle({ x: 0, y: 0, width: W, height: H, color: hex("#fffdf7") });
-  page.drawCircle({ x: 0, y: H, size: 150, color: hex(brand.brand) });
-  page.drawCircle({ x: 60, y: H - 20, size: 60, color: hex(brand.brand2), opacity: 0.6 });
+  page.drawCircle({ x: 0, y: H, size: 150, color: hex(brand.gradA ?? brand.brand) });
+  page.drawCircle({ x: 60, y: H - 20, size: 60, color: hex(brand.gradB ?? brand.brand2), opacity: 0.6 });
   page.drawCircle({ x: W, y: 0, size: 170, color: hex("#ffc93d") });
   page.drawCircle({ x: W - 70, y: 30, size: 70, color: hex("#ff9f1c"), opacity: 0.7 });
   page.drawRectangle({ x: 28, y: 28, width: W - 56, height: H - 56, borderColor: hex("#e6e2f3"), borderWidth: 2 });

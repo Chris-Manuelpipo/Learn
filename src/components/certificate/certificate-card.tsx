@@ -18,7 +18,7 @@ export function CertificateCard(p: Props) {
   return (
     <div className="relative aspect-[1.414] w-full overflow-hidden rounded-[1.5rem] bg-[#fffdf7] text-[#16161a] shadow-[var(--shadow-pop)] ring-1 ring-black/5">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,color-mix(in_srgb,var(--brand-print)_12%,transparent)_0,transparent_35%),radial-gradient(circle_at_100%_100%,#fff3d6_0,transparent_35%)]" />
-      <div className="absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-brand to-brand-2 opacity-90" />
+      <div className="absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-grad-a to-grad-b opacity-90" />
       <div className="absolute -bottom-20 -right-12 h-56 w-56 rounded-full bg-gradient-to-br from-[#ffc93d] to-[#ff9f1c] opacity-80" />
       <div className="absolute inset-[3.5%] rounded-[1rem] border-2 border-[#16161a]/10" />
 

@@ -8,6 +8,8 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { isCurrency } from "@/lib/currency";
+import { PALETTE_COOKIE, isPaletteName } from "@/lib/palettes";
+import { cookies } from "next/headers";
 import type { FormState } from "./auth";
 
 const ProfileSchema = z.object({
@@ -91,4 +93,13 @@ export async function applyInstructor(_: FormState, formData: FormData): Promise
   });
   revalidatePath("/become-instructor");
   return { ok: true, message: "Candidature envoyée ! Notre équipe te répond sous 48 h." };
+}
+
+export async function setAccentColor(name: string) {
+  if (!isPaletteName(name)) return { error: "Couleur inconnue." };
+  (await cookies()).set(PALETTE_COOKIE, name, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  const user = await getCurrentUser();
+  if (user) await db.user.update({ where: { id: user.id }, data: { accentColor: name } });
+  revalidatePath("/", "layout");
+  return { ok: true };
 }

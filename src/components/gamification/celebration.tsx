@@ -71,7 +71,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
               {modal.levelUp ? (
                 <>
                   <motion.div
-                    className="relative mx-auto mb-4 grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-brand to-brand-2 text-5xl font-extrabold text-white shadow-[var(--shadow-pop)]"
+                    className="relative mx-auto mb-4 grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-grad-a to-grad-b text-5xl font-extrabold text-white shadow-[var(--shadow-pop)]"
                     initial={{ rotate: -20, scale: 0 }}
                     animate={{ rotate: 0, scale: 1 }}
                     transition={{ type: "spring", delay: 0.15 }}

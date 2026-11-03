@@ -138,7 +138,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <p className="font-display text-4xl font-extrabold text-brand">{level.level}</p>
             <p className="text-sm font-bold text-muted">{formatNumber(user.xp)} XP au total</p>
           </div>
-          <ProgressBar value={level.percent} className="mt-4" height={12} color="linear-gradient(90deg,var(--brand),var(--brand-2))" />
+          <ProgressBar value={level.percent} className="mt-4" height={12} color="linear-gradient(90deg,var(--grad-a),var(--grad-b))" />
           <p className="mt-2 text-xs font-bold text-muted">
             Encore {formatNumber(level.needed - level.current)} XP pour le niveau {level.level + 1}
           </p>

@@ -45,6 +45,8 @@
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
   --color-brand-2: var(--brand-2);
+  --color-grad-a: var(--grad-a);
+  --color-grad-b: var(--grad-b);
   --color-on-brand: var(--on-brand);
   --color-night: var(--night);
   --color-night-2: var(--night-2);
@@ -152,7 +154,7 @@
   }
 
   .text-gradient {
-    background: linear-gradient(100deg, var(--brand) 0%, var(--brand-2) 100%);
+    background: linear-gradient(100deg, var(--brand) 0%, var(--text-grad-b) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

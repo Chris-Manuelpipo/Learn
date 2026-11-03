@@ -40,7 +40,7 @@ Paiement simulé :
 - **Certificats** : délivrés à 100 % de progression + examen final ≥ 70 %. Export PDF avec QR code, page publique `/verify/<code>`, ajout à LinkedIn.
 - **Gamification** : XP, niveaux et titres, objectif quotidien, séries de jours, 18 badges, ligues hebdomadaires, classement (semaine, mois, tous les temps), célébrations animées.
 - **Paiement simulé** : multi-devises (FCFA, €, $), carte, MTN MoMo, Orange Money, PayPal ; reçus dans le profil.
-- **Profil** : avatar (emoji ou photo), bio, objectif quotidien, devise, thème clair/sombre/système, mot de passe, historique d'achats, profil public `/u/<pseudo>`.
+- **Profil** : avatar (emoji ou photo), bio, objectif quotidien, devise, thème clair/sombre/système, couleur d'accent (8 palettes, vert émeraude par défaut, appliquée jusqu'aux certificats), mot de passe, historique d'achats, profil public `/u/<pseudo>`.
 - **Formateurs** : candidature, validation par l'admin avec badge « Formateur certifié », studio complet. Un formateur certifié publie directement ; les autres passent par une validation.
 - **Admin** : revenus, moyens de paiement, top cours, modération des cours, rôles, paiements.
 

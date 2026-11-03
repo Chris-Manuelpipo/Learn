@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { Container, PageHeader } from "@/components/ui/section";
 import { ProfileForm, PreferencesForm, PasswordForm } from "@/components/profile/forms";
+import { AccentPicker } from "@/components/profile/accent-picker";
+import { DEFAULT_PALETTE, isPaletteName } from "@/lib/palettes";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Paramètres" };
@@ -21,6 +23,9 @@ export default async function ProfilePage() {
           <ProfileForm
             user={{ name: user.name, username: user.username, headline: user.headline ?? "", bio: user.bio ?? "", country: user.country ?? "", website: user.website ?? "", avatarEmoji: user.avatarEmoji, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl }}
           />
+        </Section>
+        <Section id="couleur" title="Couleur d'accent" text="Personnalise la plateforme : la couleur s'applique aux boutons, à ta progression et même à tes certificats.">
+          <AccentPicker current={isPaletteName(user.accentColor) ? user.accentColor : DEFAULT_PALETTE} />
         </Section>
         <Section id="objectif" title="Préférences d'apprentissage" text="Un objectif réaliste, tenu tous les jours, vaut mieux qu'un objectif ambitieux abandonné.">
           <PreferencesForm goal={user.dailyGoalMinutes} currency={user.currency} />

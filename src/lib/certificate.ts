@@ -10,7 +10,7 @@ export async function getCertificate(code: string) {
   return db.certificate.findUnique({
     where: { code },
     include: {
-      user: { select: { id: true, name: true, username: true, avatarEmoji: true, avatarColor: true, avatarUrl: true } },
+      user: { select: { id: true, name: true, username: true, avatarEmoji: true, avatarColor: true, avatarUrl: true, accentColor: true } },
       course: { include: { instructor: { select: { name: true, instructorVerified: true } }, category: true } },
     },
   });

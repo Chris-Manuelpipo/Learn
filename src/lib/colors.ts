@@ -1,7 +1,7 @@
 // Palette « sticker » partagée par les cours, catégories et avatars.
 export const PALETTE = {
   // « violet » est la clé historique : elle suit désormais la couleur de marque.
-  violet: { from: "var(--brand)", to: "var(--brand-2)", soft: "var(--brand-soft)", ink: "var(--brand-ink)" },
+  violet: { from: "var(--grad-a)", to: "var(--grad-b)", soft: "var(--brand-soft)", ink: "var(--brand-ink)" },
   coral: { from: "#FF7A59", to: "#FF4E7A", soft: "#FFECE6", ink: "#D23C2A" },
   mint: { from: "#1FD1A0", to: "#14B8C4", soft: "#E2FAF2", ink: "#0B8A6A" },
   sky: { from: "#3BA8FF", to: "#2563EB", soft: "#E5F3FF", ink: "#1F6FD1" },

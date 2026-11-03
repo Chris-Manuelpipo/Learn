@@ -169,7 +169,7 @@ export default async function HomePage() {
       {/* STATS */}
       <section className="py-6">
         <Container>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand to-brand-2 px-6 py-12 text-white sm:px-12">
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-grad-a to-grad-b px-6 py-12 text-white sm:px-12">
             <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full bg-white/10" />
             <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-sun/30 blur-2xl" />
             <div className="relative grid gap-8 text-center sm:grid-cols-4">

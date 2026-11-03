@@ -13,7 +13,7 @@ export function HeroVisual() {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[540px]">
       {/* Blobs */}
-      <div className="absolute inset-[8%] rounded-[38%_62%_55%_45%/45%_40%_60%_55%] bg-gradient-to-br from-brand to-brand-2 opacity-90 blur-[2px]" />
+      <div className="absolute inset-[8%] rounded-[38%_62%_55%_45%/45%_40%_60%_55%] bg-gradient-to-br from-grad-a to-grad-b opacity-90 blur-[2px]" />
       <div className="absolute inset-[8%] rounded-[38%_62%_55%_45%/45%_40%_60%_55%] bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,.45),transparent_50%)]" />
 
       {/* Carte de cours */}
@@ -24,7 +24,7 @@ export function HeroVisual() {
             <p className="text-[11px] font-extrabold uppercase tracking-wider text-brand">Développement web</p>
             <p className="mt-1 font-display text-base font-extrabold leading-tight">React 19 : interfaces réactives</p>
             <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-line">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-brand to-brand-2" initial={{ width: 0 }} animate={{ width: "68%" }} transition={{ delay: 0.9, duration: 1.2 }} />
+              <motion.div className="h-full rounded-full bg-gradient-to-r from-grad-a to-grad-b" initial={{ width: 0 }} animate={{ width: "68%" }} transition={{ delay: 0.9, duration: 1.2 }} />
             </div>
             <p className="mt-1.5 text-right text-[11px] font-bold text-muted">68 % terminé</p>
           </div>
