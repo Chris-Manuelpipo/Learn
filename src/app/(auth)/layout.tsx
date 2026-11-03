@@ -1,7 +1,10 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 import { Logo } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  if (await getCurrentUser()) redirect("/dashboard");
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_1.05fr]">
       <div className="flex flex-col px-5 py-6 sm:px-10">

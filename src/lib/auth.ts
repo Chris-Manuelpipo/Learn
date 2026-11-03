@@ -26,7 +26,12 @@ export type CurrentUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>
 
 export async function requireUser(next?: string) {
   const user = await getCurrentUser();
-  if (!user) redirect(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
+  if (!user) {
+    const login = next ? `/login?next=${encodeURIComponent(next)}` : "/login";
+    // Un cookie valide sans compte (ex. base réinitialisée) doit être effacé, sinon le middleware le croit connecté.
+    const stale = (await cookies()).has(SESSION_COOKIE);
+    redirect(stale ? `/api/session/expire?to=${encodeURIComponent(login)}` : login);
+  }
   return user;
 }
 
