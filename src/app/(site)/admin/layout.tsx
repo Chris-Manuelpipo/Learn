@@ -9,7 +9,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <Container className="py-8">
       <div className="mb-6 flex items-center gap-3">
-        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#16122b] text-2xl">🛰️</span>
+        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-night text-2xl">🛰️</span>
         <div>
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-coral">Administration</p>
           <h1 className="text-2xl font-extrabold">Centre de contrôle</h1>

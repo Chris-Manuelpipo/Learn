@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">{children}</div>
       </div>
-      <aside className="relative hidden overflow-hidden bg-gradient-to-br from-[#6d4aff] via-[#9b5cff] to-[#ff5fa2] lg:block">
+      <aside className="relative hidden overflow-hidden bg-gradient-to-br from-brand to-brand-2 lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.25),transparent_45%)]" />
         <div className="absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-[#ffc23d]/40 blur-3xl" />
         <div className="relative flex h-full flex-col justify-center p-14 text-white">

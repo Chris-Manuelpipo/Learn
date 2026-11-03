@@ -76,7 +76,7 @@ export default async function CoursePage({ params }: Props) {
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden text-white" style={{ background: `linear-gradient(120deg, #16122b 0%, #16122b 45%, ${p.ink} 100%)` }}>
+      <section className="relative overflow-hidden text-white" style={{ background: `linear-gradient(120deg, var(--night) 0%, var(--night) 45%, ${p.ink} 100%)` }}>
         <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl" style={{ background: p.from }} />
         <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full opacity-25 blur-3xl" style={{ background: p.to }} />
         <Container className="relative grid gap-10 py-10 lg:grid-cols-[1fr_380px] lg:py-14">

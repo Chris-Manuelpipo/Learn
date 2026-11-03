@@ -12,7 +12,8 @@ const CelebrationContext = createContext<Ctx>({ celebrate: () => {} });
 export const useCelebrate = () => useContext(CelebrationContext).celebrate;
 
 export function fireConfetti(intense = false) {
-  const colors = ["#6d4aff", "#ff5fa2", "#ffc23d", "#1fd1a0", "#3ba8ff"];
+  const css = getComputedStyle(document.documentElement);
+  const colors = [css.getPropertyValue("--brand").trim(), css.getPropertyValue("--brand-2").trim(), "#ffc23d", "#ff6b57", "#3ba8ff"].filter(Boolean);
   confetti({ particleCount: intense ? 160 : 80, spread: intense ? 100 : 70, origin: { y: 0.65 }, colors, scalar: 1.1 });
   if (intense) {
     setTimeout(() => confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors }), 200);
@@ -50,7 +51,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
       <AnimatePresence>
         {modal && (
           <motion.div
-            className="fixed inset-0 z-[100] grid place-items-center bg-[#0d0a1a]/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] grid place-items-center bg-black/60 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -70,7 +71,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
               {modal.levelUp ? (
                 <>
                   <motion.div
-                    className="relative mx-auto mb-4 grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-[#7c5cff] to-[#ff5fa2] text-5xl font-extrabold text-white shadow-[var(--shadow-pop)]"
+                    className="relative mx-auto mb-4 grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-brand to-brand-2 text-5xl font-extrabold text-white shadow-[var(--shadow-pop)]"
                     initial={{ rotate: -20, scale: 0 }}
                     animate={{ rotate: 0, scale: 1 }}
                     transition={{ type: "spring", delay: 0.15 }}

@@ -16,7 +16,7 @@ export function WelcomeCelebration({ name }: { name: string }) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[100] grid place-items-center bg-[#0d0a1a]/60 p-4 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="fixed inset-0 z-[100] grid place-items-center bg-black/60 p-4 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <motion.div className="card w-full max-w-lg p-8 text-center" initial={{ scale: 0.8, y: 30 }} animate={{ scale: 1, y: 0 }} transition={{ type: "spring", stiffness: 200, damping: 16 }}>
             <p className="text-6xl">🎉</p>
             <h2 className="mt-4 text-3xl font-extrabold">Bienvenue, {name} !</h2>

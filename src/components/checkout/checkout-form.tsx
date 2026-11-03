@@ -18,7 +18,7 @@ type Method = "CARD" | "ORANGE_MONEY" | "MTN_MOMO" | "PAYPAL";
 const METHODS: { id: Method; label: string; sub: string; badge: React.ReactNode }[] = [
   { id: "MTN_MOMO", label: "MTN MoMo", sub: "Mobile Money", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ffcc00] text-xs font-black text-[#003c71]">MoMo</span> },
   { id: "ORANGE_MONEY", label: "Orange Money", sub: "Mobile Money", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ff7900] text-lg font-black text-white">OM</span> },
-  { id: "CARD", label: "Carte bancaire", sub: "Visa, Mastercard", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#16122b] to-[#4b2fd6] text-white"><CreditCard className="h-5 w-5" /></span> },
+  { id: "CARD", label: "Carte bancaire", sub: "Visa, Mastercard", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-night to-night-2 text-white"><CreditCard className="h-5 w-5" /></span> },
   { id: "PAYPAL", label: "PayPal", sub: "Compte PayPal", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#003087] text-lg font-black italic text-white">P</span> },
 ];
 
@@ -136,7 +136,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
                   </div>
                   <div className="[perspective:1000px]">
                     <motion.div animate={{ rotateY: flip ? 180 : 0 }} transition={{ duration: 0.6 }} className="relative aspect-[1.586] w-full [transform-style:preserve-3d]">
-                      <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br from-[#16122b] via-[#4b2fd6] to-[#c54bff] p-5 text-white shadow-[var(--shadow-pop)] [backface-visibility:hidden]">
+                      <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br from-night via-night-2 to-brand p-5 text-white shadow-[var(--shadow-pop)] [backface-visibility:hidden]">
                         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
                         <div className="flex items-center justify-between">
                           <span className="h-8 w-11 rounded-md bg-gradient-to-br from-[#ffd76a] to-[#d9a520]" />
@@ -148,9 +148,9 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
                           <span className="font-mono">{card.expiry || "MM/AA"}</span>
                         </div>
                       </div>
-                      <div className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-[#4b2fd6] to-[#16122b] text-white shadow-[var(--shadow-pop)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                      <div className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-night-2 to-night text-white shadow-[var(--shadow-pop)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
                         <div className="mt-6 h-10 bg-black/70" />
-                        <div className="mx-5 mt-5 flex h-9 items-center justify-end rounded bg-white/90 px-3 font-mono text-[#16122b]">{card.cvc || "•••"}</div>
+                        <div className="mx-5 mt-5 flex h-9 items-center justify-end rounded bg-white/90 px-3 font-mono text-[#16161a]">{card.cvc || "•••"}</div>
                       </div>
                     </motion.div>
                   </div>

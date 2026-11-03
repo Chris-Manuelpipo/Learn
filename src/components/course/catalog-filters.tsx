@@ -41,7 +41,7 @@ export function CatalogSearch({ initial }: { initial: string }) {
         placeholder="Python, design, anglais, marketing…"
         className="h-14 w-full rounded-2xl border-2 border-line bg-surface pl-14 pr-32 text-base font-medium shadow-[var(--shadow-soft)] outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
       />
-      <button className="absolute right-2 top-2 h-10 rounded-xl bg-brand px-5 text-sm font-bold text-white transition hover:brightness-110 active:scale-95">
+      <button className="absolute right-2 top-2 h-10 rounded-xl bg-brand px-5 text-sm font-bold text-on-brand transition hover:brightness-110 active:scale-95">
         Rechercher
       </button>
     </form>
@@ -94,7 +94,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       active ? "bg-brand-soft text-brand-ink" : "text-ink-soft hover:bg-surface-2",
     );
   const box = (active: boolean) =>
-    cn("grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 text-[10px] text-white transition", active ? "border-brand bg-brand" : "border-line-strong");
+    cn("grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 text-[10px] text-on-brand transition", active ? "border-brand bg-brand" : "border-line-strong");
 
   const content = (
     <div className={cn("space-y-7 transition-opacity", pending && "opacity-60")}>
@@ -180,7 +180,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
   return (
     <>
       <button onClick={() => setOpen(!open)} className="flex items-center justify-center gap-2 rounded-2xl border-2 border-line bg-surface py-3 font-bold lg:hidden">
-        <SlidersHorizontal className="h-4 w-4" /> Filtres {activeCount > 0 && <span className="rounded-full bg-brand px-2 text-xs text-white">{activeCount}</span>}
+        <SlidersHorizontal className="h-4 w-4" /> Filtres {activeCount > 0 && <span className="rounded-full bg-brand px-2 text-xs text-on-brand">{activeCount}</span>}
       </button>
       <aside className={cn("lg:sticky lg:top-24 lg:block lg:self-start", open ? "block" : "hidden")}>
         <div className="card p-4 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto">{content}</div>
@@ -216,7 +216,7 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
           {i > 0 && nums[i - 1] !== n - 1 && <span className="px-1 text-muted">…</span>}
           <button
             onClick={() => go(n)}
-            className={cn("h-11 min-w-11 rounded-xl px-3 font-extrabold transition", n === page ? "bg-brand text-white shadow-[0_4px_0_#4422d6]" : "border-2 border-line bg-surface hover:border-brand")}
+            className={cn("h-11 min-w-11 rounded-xl px-3 font-extrabold transition", n === page ? "bg-brand text-on-brand shadow-[0_4px_0_var(--chunk)]" : "border-2 border-line bg-surface hover:border-brand")}
           >
             {n}
           </button>

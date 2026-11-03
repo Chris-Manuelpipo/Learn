@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 
 type Day = { date: string; xp: number; minutes: number };
 
-const LEVELS = ["var(--surface-2)", "#d9cfff", "#a993ff", "#7c5cff", "#5433f0"];
+const LEVELS = ["var(--surface-2)", "color-mix(in srgb, var(--brand) 25%, var(--surface))", "color-mix(in srgb, var(--brand) 50%, var(--surface))", "color-mix(in srgb, var(--brand) 78%, var(--surface))", "var(--brand)"];
 const DARK_SAFE = "color-mix(in srgb, var(--line) 60%, transparent)";
 
 function level(xp: number) {
@@ -54,11 +54,11 @@ export function ActivityHeatmap({ days }: { days: Day[] }) {
                       />
                     </Tooltip.Trigger>
                     <Tooltip.Portal>
-                      <Tooltip.Content sideOffset={6} className="z-50 rounded-xl bg-[#16122b] px-3 py-2 text-xs font-bold text-white shadow-xl">
+                      <Tooltip.Content sideOffset={6} className="z-50 rounded-xl bg-night px-3 py-2 text-xs font-bold text-white shadow-xl">
                         {formatDate(d.date + "T12:00:00", { weekday: "long", day: "numeric", month: "long" })}
                         <br />
                         <span className="text-sun">{d.xp} XP</span> · {d.minutes} min
-                        <Tooltip.Arrow className="fill-[#16122b]" />
+                        <Tooltip.Arrow className="fill-night" />
                       </Tooltip.Content>
                     </Tooltip.Portal>
                   </Tooltip.Root>
@@ -94,7 +94,7 @@ export function WeekBars({ days }: { days: Day[] }) {
               animate={{ height: `${Math.max(4, (d.xp / max) * 100)}%` }}
               transition={{ delay: i * 0.06, type: "spring", stiffness: 120, damping: 16 }}
               className="w-full max-w-12 rounded-t-xl rounded-b-md"
-              style={{ background: d.xp === 0 ? "var(--line)" : isToday ? "linear-gradient(180deg,#ff5fa2,#7c5cff)" : "linear-gradient(180deg,#a993ff,#7c5cff)" }}
+              style={{ background: d.xp === 0 ? "var(--line)" : isToday ? "linear-gradient(180deg,var(--brand-2),var(--brand))" : "linear-gradient(180deg,color-mix(in srgb,var(--brand) 55%,white),var(--brand))" }}
             />
             <span className={`text-xs font-extrabold capitalize ${isToday ? "text-brand" : "text-muted"}`}>
               {isToday ? "Auj." : formatDate(date, { weekday: "short" }).replace(".", "")}

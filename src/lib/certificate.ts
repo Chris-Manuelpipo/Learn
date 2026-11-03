@@ -21,5 +21,5 @@ export function verifyUrl(code: string) {
 }
 
 export async function qrSvg(code: string) {
-  return QRCode.toString(verifyUrl(code), { type: "svg", margin: 0, color: { dark: "#16122b", light: "#00000000" } });
+  return QRCode.toString(verifyUrl(code), { type: "svg", margin: 0, color: { dark: "#16161a", light: "#00000000" } });
 }

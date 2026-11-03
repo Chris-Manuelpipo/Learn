@@ -72,7 +72,7 @@ export function LearnShell({
                         onClick={() => setMobileOpen(false)}
                         className={cn(
                           "relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition",
-                          active ? "bg-brand text-white shadow-[0_3px_0_#4422d6]" : "text-ink-soft hover:bg-surface-2",
+                          active ? "bg-brand text-on-brand shadow-[0_3px_0_var(--chunk)]" : "text-ink-soft hover:bg-surface-2",
                         )}
                       >
                         <span className={cn("grid h-5 w-5 shrink-0 place-items-center rounded-full", l.done ? (active ? "bg-white/25" : "bg-mint text-white") : "")}>
@@ -150,7 +150,7 @@ export function LearnShell({
 
       {mobileOpen && (
         <div className="fixed inset-0 z-[70] lg:hidden">
-          <div className="absolute inset-0 bg-[#0d0a1a]/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="absolute inset-y-0 right-0 w-[88vw] max-w-sm overflow-y-auto bg-surface shadow-2xl">
             <div className="flex items-center justify-between p-4">
               <p className="font-display text-lg font-extrabold">Programme · {progress} %</p>

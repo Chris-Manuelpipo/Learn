@@ -26,7 +26,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#16122b] to-[#2d1f6b] pb-32 pt-12 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-night to-night-2 pb-32 pt-12 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,194,61,.25),transparent_50%)]" />
         <Container className="relative text-center">
           <p className="text-5xl">🏆</p>
@@ -34,7 +34,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
           <p className="mt-2 text-white/70">Gagne de l'XP en apprenant et grimpe parmi les meilleurs apprenants.</p>
           <div className="mx-auto mt-6 inline-flex rounded-2xl bg-white/10 p-1.5">
             {PERIODS.map(([k, l]) => (
-              <Link key={k} href={`/leaderboard?period=${k}`} className={cn("rounded-xl px-4 py-2 text-sm font-extrabold transition", period === k ? "bg-white text-[#16122b]" : "text-white/75 hover:text-white")}>
+              <Link key={k} href={`/leaderboard?period=${k}`} className={cn("rounded-xl px-4 py-2 text-sm font-extrabold transition", period === k ? "bg-white text-[#16161a]" : "text-white/75 hover:text-white")}>
                 {l}
               </Link>
             ))}
@@ -92,7 +92,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         </div>
 
         {user && myIndex === -1 && (
-          <div className="sticky bottom-4 mt-6 flex items-center gap-4 rounded-3xl bg-[#16122b] p-4 text-white shadow-2xl">
+          <div className="sticky bottom-4 mt-6 flex items-center gap-4 rounded-3xl bg-night p-4 text-white shadow-2xl">
             <Avatar user={user} size={44} />
             <p className="flex-1 text-sm font-bold">Tu n'es pas encore dans le top 50 sur cette période. Une leçon = 10 XP, un quiz = 25 XP. À toi de jouer !</p>
             <Link href="/my-courses" className="rounded-xl bg-sun px-4 py-2 text-sm font-extrabold text-[#4a2f00]">

@@ -138,7 +138,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <p className="font-display text-4xl font-extrabold text-brand">{level.level}</p>
             <p className="text-sm font-bold text-muted">{formatNumber(user.xp)} XP au total</p>
           </div>
-          <ProgressBar value={level.percent} className="mt-4" height={12} color="linear-gradient(90deg,#7c5cff,#ff5fa2)" />
+          <ProgressBar value={level.percent} className="mt-4" height={12} color="linear-gradient(90deg,var(--brand),var(--brand-2))" />
           <p className="mt-2 text-xs font-bold text-muted">
             Encore {formatNumber(level.needed - level.current)} XP pour le niveau {level.level + 1}
           </p>
@@ -274,7 +274,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         {/* COLONNE DROITE */}
         <aside className="space-y-6">
           <section className="card overflow-hidden">
-            <div className="bg-gradient-to-br from-[#16122b] to-[#3b2a8a] p-5 text-white">
+            <div className="bg-gradient-to-br from-night to-night-2 p-5 text-white">
               <div className="flex items-center justify-between">
                 <p className="font-display text-lg font-extrabold">Ligue {league.name}</p>
                 <span className="text-3xl">{league.emoji}</span>

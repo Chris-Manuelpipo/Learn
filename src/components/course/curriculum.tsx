@@ -76,8 +76,8 @@ export function Curriculum({ chapters, finalExam }: { chapters: Chapter[]; final
 
       <Dialog.Root open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[80] bg-[#0d0a1a]/75 backdrop-blur-sm" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 z-[81] w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-[#0d0a1a] shadow-2xl">
+          <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/75 backdrop-blur-sm" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[81] w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-[#111315] shadow-2xl">
             <div className="flex items-center justify-between gap-4 p-4 text-white">
               <Dialog.Title className="font-display text-lg font-extrabold">Aperçu · {preview?.title}</Dialog.Title>
               <Dialog.Close className="grid h-9 w-9 place-items-center rounded-xl hover:bg-white/10" aria-label="Fermer">

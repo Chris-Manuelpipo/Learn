@@ -27,7 +27,7 @@ export default async function CertificatesPage() {
             <Link key={c.id} href={`/certificates/${c.code}`} className="group card overflow-hidden p-2.5 transition hover:-translate-y-1 hover:shadow-[var(--shadow-pop)]">
               <div className="relative">
                 <CourseCover course={c.course} className="aspect-[16/9] rounded-[1.25rem]" />
-                <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-[#16122b]">🎓 Score {c.score} %</span>
+                <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-[#16161a]">🎓 Score {c.score} %</span>
               </div>
               <div className="p-4">
                 <p className="font-extrabold leading-snug">{c.course.title}</p>

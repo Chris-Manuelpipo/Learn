@@ -117,7 +117,7 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
 
       <Dialog.Root open={!!quizFor} onOpenChange={(o) => !o && setQuizFor(null)}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[80] bg-[#0d0a1a]/60 backdrop-blur-sm" />
+          <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm" />
           <Dialog.Content className="fixed inset-x-3 top-[4vh] z-[81] mx-auto max-h-[92vh] max-w-3xl overflow-y-auto rounded-3xl bg-bg p-5 shadow-2xl sm:p-8">
             <div className="mb-4 flex items-center justify-between">
               <Dialog.Title className="text-2xl font-extrabold">{quizFor?.title}</Dialog.Title>
@@ -160,7 +160,7 @@ function LessonDialog({ state, onClose, onSave, pending }: { state: { chapterId:
   return (
     <Dialog.Root open={!!state} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[80] bg-[#0d0a1a]/60 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm" />
         <Dialog.Content className="fixed inset-x-3 top-[5vh] z-[81] mx-auto max-h-[90vh] max-w-2xl overflow-y-auto rounded-3xl bg-surface p-6 shadow-2xl sm:p-8">
           <div className="mb-6 flex items-center justify-between">
             <Dialog.Title className="text-2xl font-extrabold">{l ? "Modifier la leçon" : "Nouvelle leçon"}</Dialog.Title>

@@ -145,7 +145,7 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
         {nextHref && (
           <Link
             href={nextHref}
-            className={cn("group flex items-center justify-end gap-3 rounded-[1.75rem] p-4 text-right transition hover:-translate-y-0.5", done ? "bg-brand text-white shadow-[0_5px_0_#4422d6]" : "card")}
+            className={cn("group flex items-center justify-end gap-3 rounded-[1.75rem] p-4 text-right transition hover:-translate-y-0.5", done ? "bg-brand text-on-brand shadow-[0_5px_0_var(--chunk)]" : "card")}
           >
             <span className="min-w-0">
               <span className={cn("block text-xs font-bold", done ? "text-white/75" : "text-muted")}>{next ? "Leçon suivante" : "Dernière étape"}</span>

@@ -27,7 +27,7 @@ export function MobileNav({ links, user }: { links: { href: string; label: strin
         <Menu className="h-5 w-5" />
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[70] bg-[#0d0a1a]/50 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" />
         <Dialog.Content className="fixed inset-y-0 left-0 z-[71] flex w-[85vw] max-w-sm flex-col bg-surface p-5 shadow-2xl">
           <div className="mb-6 flex items-center justify-between">
             <Dialog.Title className="flex items-center gap-2 font-display text-xl font-extrabold">

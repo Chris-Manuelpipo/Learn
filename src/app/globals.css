@@ -4,37 +4,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --bg: #fbfaff;
-  --bg-soft: #f4f1ff;
+  /* Neutres. Les couleurs de marque viennent de src/lib/palettes.ts. */
+  --bg: #fafaf8;
+  --bg-soft: color-mix(in srgb, var(--brand-soft) 55%, var(--bg));
   --surface: #ffffff;
-  --surface-2: #f7f5fe;
-  --ink: #16122b;
-  --ink-soft: #3d3858;
-  --muted: #6e6a8a;
-  --line: #ebe7f7;
-  --line-strong: #d9d3ef;
-  --brand: #6d4aff;
-  --brand-ink: #5433f0;
-  --brand-soft: #efeaff;
-  --shadow-color: 250deg 60% 40%;
-  --ring: #6d4aff55;
+  --surface-2: #f4f5f3;
+  --ink: #16191c;
+  --ink-soft: #3b4247;
+  --muted: #697177;
+  --line: #e7e9e6;
+  --line-strong: #d3d7d3;
+  --shadow-color: 200deg 15% 25%;
 }
 
 .dark {
-  --bg: #0d0a1a;
-  --bg-soft: #141029;
-  --surface: #17132b;
-  --surface-2: #1e1937;
-  --ink: #f5f3ff;
-  --ink-soft: #d6d1f0;
-  --muted: #a39dc4;
-  --line: #2a2447;
-  --line-strong: #3a3360;
-  --brand: #8b70ff;
-  --brand-ink: #a993ff;
-  --brand-soft: #251d4d;
-  --shadow-color: 250deg 80% 3%;
-  --ring: #8b70ff66;
+  /* Graphite neutre : aucune teinte, pour un mode sombre reposant. */
+  --bg: #111315;
+  --bg-soft: #15181a;
+  --surface: #1a1d20;
+  --surface-2: #212528;
+  --ink: #f2f4f3;
+  --ink-soft: #d0d5d3;
+  --muted: #9aa2a0;
+  --line: #2a2f33;
+  --line-strong: #393f44;
+  --shadow-color: 0deg 0% 0%;
 }
 
 @theme inline {
@@ -50,6 +44,10 @@
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-2: var(--brand-2);
+  --color-on-brand: var(--on-brand);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
 
   --color-coral: #ff6b57;
   --color-sun: #ffc23d;
@@ -113,7 +111,7 @@
   }
   ::selection {
     background: var(--brand);
-    color: white;
+    color: var(--on-brand);
   }
   :focus-visible {
     outline: 3px solid var(--ring);
@@ -129,7 +127,7 @@
 @layer components {
   /* Bouton « chunky » : une ombre pleine sous le bouton qui s'enfonce au clic. */
   .btn-chunky {
-    box-shadow: 0 4px 0 0 var(--chunk, #4422d6);
+    box-shadow: 0 4px 0 0 var(--chunk);
     transform: translateY(0);
     transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
   }
@@ -138,7 +136,7 @@
   }
   .btn-chunky:active {
     transform: translateY(3px);
-    box-shadow: 0 1px 0 0 var(--chunk, #4422d6);
+    box-shadow: 0 1px 0 0 var(--chunk);
   }
 
   .card {
@@ -154,7 +152,7 @@
   }
 
   .text-gradient {
-    background: linear-gradient(100deg, #6d4aff 0%, #ff5fa2 50%, #ff9f1c 100%);
+    background: linear-gradient(100deg, var(--brand) 0%, var(--brand-2) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -36,7 +36,7 @@ export function CourseCard({ course, currency, favorite, progress, href }: { cou
         <CourseCover course={course} className="aspect-[16/10] rounded-[1.25rem]" />
         <div className="absolute left-5 top-5 z-20 flex gap-1.5">
           {course.certified && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-extrabold text-[#16122b] shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-extrabold text-[#16161a] shadow-sm">
               🎓 Certifiant
             </span>
           )}

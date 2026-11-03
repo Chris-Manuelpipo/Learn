@@ -57,7 +57,7 @@ export function RegisterForm({ next }: { next?: string }) {
         <div className="flex flex-1 gap-2">
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-3 flex-1 overflow-hidden rounded-full bg-line">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-[#7c5cff] to-[#ff5fa2]" animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.4 }} />
+              <motion.div className="h-full rounded-full bg-gradient-to-r from-brand to-brand-2" animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.4 }} />
             </div>
           ))}
         </div>
@@ -96,7 +96,7 @@ export function RegisterForm({ next }: { next?: string }) {
           {step === 1 && (
             <div className="mt-8">
               <div className="mb-6 flex justify-center">
-                <motion.div key={data.avatarEmoji} initial={{ scale: 0.5, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} className="grid h-28 w-28 place-items-center rounded-full bg-gradient-to-br from-[#7c5cff] to-[#ff5fa2] text-6xl shadow-[var(--shadow-pop)]">
+                <motion.div key={data.avatarEmoji} initial={{ scale: 0.5, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} className="grid h-28 w-28 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-2 text-6xl shadow-[var(--shadow-pop)]">
                   {data.avatarEmoji}
                 </motion.div>
               </div>

@@ -37,7 +37,7 @@ export default async function MyCoursesPage({ searchParams }: { searchParams: Pr
           <Link
             key={k}
             href={`/my-courses?tab=${k}`}
-            className={cn("flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-extrabold transition", tab === k ? "bg-brand text-white shadow-[0_4px_0_#4422d6]" : "bg-surface text-ink-soft ring-2 ring-line hover:ring-line-strong")}
+            className={cn("flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-extrabold transition", tab === k ? "bg-brand text-on-brand shadow-[0_4px_0_var(--chunk)]" : "bg-surface text-ink-soft ring-2 ring-line hover:ring-line-strong")}
           >
             {e} {l}
             <span className={cn("rounded-full px-2 text-xs", tab === k ? "bg-white/25" : "bg-surface-2")}>{counts[k]}</span>

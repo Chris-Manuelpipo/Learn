@@ -21,7 +21,7 @@ export default async function BadgesPage() {
       <PageHeader emoji="🏅" title="Badges & succès" text={`${earned.size} badge${earned.size > 1 ? "s" : ""} débloqué${earned.size > 1 ? "s" : ""} sur ${badges.length}. Chaque badge rapporte de l'XP bonus !`} />
 
       <div className="mb-10 grid gap-4 md:grid-cols-3">
-        <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#7c5cff] to-[#c54bff] p-6 text-white md:col-span-2">
+        <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-brand to-brand-2 p-6 text-white md:col-span-2">
           <div className="absolute -right-6 -top-10 font-display text-[10rem] font-extrabold opacity-10">{level.level}</div>
           <p className="text-sm font-extrabold uppercase tracking-wider text-white/70">Niveau {level.level}</p>
           <p className="font-display text-4xl font-extrabold">{level.title}</p>

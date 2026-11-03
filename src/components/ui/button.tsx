@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const VARIANTS = {
-  primary: "bg-brand text-white [--chunk:#4422d6] dark:[--chunk:#3b1fc0] btn-chunky",
+  primary: "bg-brand text-on-brand btn-chunky",
   secondary: "bg-surface text-ink border-2 border-line-strong [--chunk:var(--line-strong)] btn-chunky",
   mint: "bg-mint text-[#063d2e] [--chunk:#0ea47b] btn-chunky",
   sun: "bg-sun text-[#4a2f00] [--chunk:#d99a0b] btn-chunky",

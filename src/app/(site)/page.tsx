@@ -43,7 +43,7 @@ export default async function HomePage() {
         <Container className="relative grid items-center gap-10 py-14 lg:grid-cols-[1.05fr_1fr] lg:py-20">
           <div>
             <Link href="/courses?certified=1" className="group mb-6 inline-flex items-center gap-2 rounded-full border-2 border-line bg-surface py-1.5 pl-1.5 pr-4 text-sm font-bold shadow-sm transition hover:border-brand">
-              <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-extrabold text-white">Nouveau</span>
+              <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-extrabold text-on-brand">Nouveau</span>
               Certificats vérifiables par QR code
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
             </Link>
@@ -169,9 +169,9 @@ export default async function HomePage() {
       {/* STATS */}
       <section className="py-6">
         <Container>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#6d4aff] via-[#8b5cff] to-[#c54bff] px-6 py-12 text-white sm:px-12">
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand to-brand-2 px-6 py-12 text-white sm:px-12">
             <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full bg-white/10" />
-            <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-[#ff5fa2]/30 blur-2xl" />
+            <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-sun/30 blur-2xl" />
             <div className="relative grid gap-8 text-center sm:grid-cols-4">
               {[
                 [formatNumber(courseCount), "cours disponibles"],
@@ -302,8 +302,8 @@ export default async function HomePage() {
               Devenir formateur
             </Link>
           </div>
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-[#16122b] p-8 text-white sm:p-10 dark:bg-brand-soft">
-            <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-gradient-to-br from-[#ffc23d] to-[#ff5fa2] opacity-80 blur-sm" />
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-night p-8 text-white sm:p-10 dark:bg-brand-soft">
+            <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-gradient-to-br from-[#ffc23d] to-[#ff9f1c] opacity-80 blur-sm" />
             <Repeat className="relative h-10 w-10 text-sun" />
             <h3 className="relative mt-4 text-3xl font-extrabold">15 minutes par jour suffisent.</h3>
             <p className="relative mt-3 max-w-md text-white/70">Fixe ton objectif, lance ta première leçon et regarde ta série grandir.</p>

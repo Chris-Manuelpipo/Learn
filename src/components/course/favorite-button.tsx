@@ -30,7 +30,7 @@ export function FavoriteButton({ courseId, initial, className }: { courseId: str
       aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
       aria-pressed={fav}
     >
-      <Heart className={cn("h-[18px] w-[18px] transition", fav ? "fill-pink text-pink animate-pop" : "text-[#16122b]")} />
+      <Heart className={cn("h-[18px] w-[18px] transition", fav ? "fill-pink text-pink animate-pop" : "text-[#16161a]")} />
     </button>
   );
 }

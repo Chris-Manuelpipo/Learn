@@ -17,11 +17,11 @@ export function RevenueChart({ data }: { data: { date: string; value: number }[]
                 animate={{ height: `${Math.max(2, (d.value / max) * 100)}%` }}
                 transition={{ delay: i * 0.015, type: "spring", stiffness: 140, damping: 18 }}
                 className="flex-1 rounded-t-md transition-opacity hover:opacity-80"
-                style={{ background: d.value ? "linear-gradient(180deg,#a993ff,#6d4aff)" : "var(--line)" }}
+                style={{ background: d.value ? "linear-gradient(180deg,color-mix(in srgb,var(--brand) 55%,white),var(--brand))" : "var(--line)" }}
               />
             </Tooltip.Trigger>
             <Tooltip.Portal>
-              <Tooltip.Content sideOffset={6} className="z-50 rounded-xl bg-[#16122b] px-3 py-2 text-xs font-bold text-white shadow-xl">
+              <Tooltip.Content sideOffset={6} className="z-50 rounded-xl bg-night px-3 py-2 text-xs font-bold text-white shadow-xl">
                 {formatDate(d.date + "T12:00:00", { day: "numeric", month: "short" })} · {formatNumber(d.value)} FCFA
               </Tooltip.Content>
             </Tooltip.Portal>

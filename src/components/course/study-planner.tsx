@@ -49,7 +49,7 @@ export function StudyPlanner({ totalMinutes, defaultMinutes }: { totalMinutes: n
       <div className="mt-5 flex flex-wrap items-center gap-3 text-sm font-semibold">
         <span className="text-muted">Jours par semaine :</span>
         {[3, 5, 7].map((d) => (
-          <button key={d} onClick={() => setDays(d)} className={cn("h-9 rounded-xl px-3.5 font-extrabold transition", days === d ? "bg-brand text-white" : "bg-surface text-ink-soft hover:bg-surface-2")}>
+          <button key={d} onClick={() => setDays(d)} className={cn("h-9 rounded-xl px-3.5 font-extrabold transition", days === d ? "bg-brand text-on-brand" : "bg-surface text-ink-soft hover:bg-surface-2")}>
             {d} j
           </button>
         ))}

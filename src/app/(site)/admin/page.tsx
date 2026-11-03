@@ -33,7 +33,7 @@ export default async function AdminPage() {
     return { date: dayKey(d), value: byDay.get(dayKey(d)) ?? 0 };
   });
   const totalMethods = methods.reduce((s, m) => s + m._count, 0);
-  const METHOD = { CARD: ["Carte", "#6d4aff"], ORANGE_MONEY: ["Orange Money", "#ff7900"], MTN_MOMO: ["MTN MoMo", "#ffcc00"], PAYPAL: ["PayPal", "#003087"] } as const;
+  const METHOD = { CARD: ["Carte", "var(--brand)"], ORANGE_MONEY: ["Orange Money", "#ff7900"], MTN_MOMO: ["MTN MoMo", "#ffcc00"], PAYPAL: ["PayPal", "#003087"] } as const;
 
   return (
     <div className="space-y-6">

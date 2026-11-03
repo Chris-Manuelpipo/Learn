@@ -24,7 +24,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
     <div>
       <div className="mb-5 flex flex-wrap items-center gap-2">
         {STATUSES.map(([s, l]) => (
-          <Link key={l} href={s ? `?status=${s}` : "?"} className={cn("rounded-xl px-3.5 py-2 text-sm font-extrabold", (status ?? null) === s ? "bg-brand text-white" : "bg-surface ring-2 ring-line")}>
+          <Link key={l} href={s ? `?status=${s}` : "?"} className={cn("rounded-xl px-3.5 py-2 text-sm font-extrabold", (status ?? null) === s ? "bg-brand text-on-brand" : "bg-surface ring-2 ring-line")}>
             {l}
           </Link>
         ))}

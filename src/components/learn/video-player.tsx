@@ -143,7 +143,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, { src: string; resumeAt?: nu
             }}
           >
             <div className="absolute inset-y-0 left-0 rounded-full bg-white/30" style={{ width: `${buffered}%` }} />
-            <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7c5cff] to-[#ff5fa2]" style={{ width: `${pct}%` }} />
+            <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-brand to-brand-2" style={{ width: `${pct}%` }} />
             <div className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-white shadow transition group-hover/bar:scale-100" style={{ left: `${pct}%` }} />
           </div>
           <div className="flex items-center gap-1 sm:gap-2">

@@ -202,7 +202,7 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
                   <span
                     className={cn(
                       "grid h-8 w-8 shrink-0 place-items-center rounded-xl border-2 text-sm font-extrabold",
-                      state === "sel" ? "border-brand bg-brand text-white" : state === "right" ? "border-mint bg-mint text-white" : state === "wrong" ? "border-coral bg-coral text-white" : "border-line-strong text-muted",
+                      state === "sel" ? "border-brand bg-brand text-on-brand" : state === "right" ? "border-mint bg-mint text-white" : state === "wrong" ? "border-coral bg-coral text-white" : "border-line-strong text-muted",
                     )}
                   >
                     {state === "right" ? <Check className="h-4 w-4" strokeWidth={3} /> : state === "wrong" ? <X className="h-4 w-4" strokeWidth={3} /> : i + 1}

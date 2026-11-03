@@ -37,7 +37,7 @@ export function UserMenu({ user, level }: Props) {
                 {level.current}/{level.needed} XP
               </span>
             </div>
-            <ProgressBar value={level.percent} height={8} color="linear-gradient(90deg,#7c5cff,#ff5fa2)" />
+            <ProgressBar value={level.percent} height={8} color="linear-gradient(90deg,var(--brand),var(--brand-2))" />
           </div>
           <DM.Item asChild><Link href="/dashboard" className={item}><LayoutDashboard className="h-4 w-4 text-muted" /> Tableau de bord</Link></DM.Item>
           <DM.Item asChild><Link href="/my-courses" className={item}><BookOpen className="h-4 w-4 text-muted" /> Mes cours</Link></DM.Item>
