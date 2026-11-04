@@ -27,19 +27,19 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     <div>
       <div className="mb-5 flex flex-wrap items-center gap-2">
         {ROLES.map(([r, l]) => (
-          <Link key={l} href={r ? `?role=${r}` : "?"} className={cn("rounded-xl px-3.5 py-2 text-sm font-extrabold", (role ?? null) === r ? "bg-brand text-on-brand" : "bg-surface ring-2 ring-line")}>
+          <Link key={l} href={r ? `?role=${r}` : "?"} className={cn("rounded-xl px-3.5 py-2 text-sm font-bold", (role ?? null) === r ? "bg-brand text-on-brand" : "bg-surface ring-2 ring-line")}>
             {l}
           </Link>
         ))}
         <span className="text-sm font-bold text-muted">{formatNumber(total)} résultats</span>
         <form className="ml-auto">
           {role && <input type="hidden" name="role" value={role} />}
-          <input name="q" defaultValue={q} placeholder="Nom ou email…" className="h-10 rounded-xl border-2 border-line bg-surface px-3 text-sm outline-none focus:border-brand" />
+          <input name="q" defaultValue={q} placeholder="Nom ou email…" className="h-10 rounded-xl border border-line bg-surface px-3 text-sm outline-none focus:border-brand" />
         </form>
       </div>
       <div className="card overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b border-line text-xs font-extrabold uppercase tracking-wider text-muted">
+          <thead className="border-b border-line text-xs font-bold uppercase tracking-wider text-muted">
             <tr>
               <th className="p-4">Utilisateur</th>
               <th className="p-4">Niveau</th>

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgeCheck, Calendar, Globe, MapPin } from "lucide-react";
+import { BadgeCheck, Calendar, Flame, Globe, GraduationCap, MapPin, type LucideIcon } from "lucide-react";
+import { BadgeMedal } from "@/components/ui/badge-medal";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
@@ -38,14 +39,14 @@ export default async function PublicProfile({ params }: Props) {
 
   return (
     <div>
-      <div className="h-44 bg-gradient-to-r from-grad-a to-grad-b sm:h-56" />
+      <div className="h-40 sm:h-52" style={{ background: "var(--night)" }} />
       <Container>
         <div className="-mt-20 flex flex-col gap-5 sm:flex-row sm:items-end">
           <Avatar user={profile} size={144} ring className="shadow-xl" />
           <div className="flex-1 pb-2">
-            <h1 className="flex items-center gap-2 text-3xl font-extrabold sm:text-4xl">
+            <h1 className="flex items-center gap-2 text-3xl font-bold sm:text-4xl">
               {profile.name}
-              {profile.instructorVerified && <BadgeCheck className="h-7 w-7 text-sky" aria-label="Formateur certifié" />}
+              {profile.instructorVerified && <BadgeCheck className="h-7 w-7 text-brand" aria-label="Formateur certifié" />}
             </h1>
             <p className="font-semibold text-muted">@{profile.username}{profile.headline && ` · ${profile.headline}`}</p>
             <div className="mt-2 flex flex-wrap gap-4 text-sm font-semibold text-muted">
@@ -60,20 +61,20 @@ export default async function PublicProfile({ params }: Props) {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="card p-5 sm:col-span-2">
             <div className="flex items-baseline justify-between">
-              <p className="font-display text-2xl font-extrabold">Niveau {level.level} <span className="text-brand">· {level.title}</span></p>
+              <p className="text-2xl font-bold">Niveau {level.level} <span className="text-brand">· {level.title}</span></p>
               <p className="text-sm font-bold text-muted">{formatNumber(profile.xp)} XP</p>
             </div>
             <ProgressBar value={level.percent} className="mt-3" height={12} color="linear-gradient(90deg,var(--grad-a),var(--grad-b))" />
           </div>
-          <Stat emoji="🔥" value={profile.streak} label={`jours de série (record ${profile.bestStreak})`} />
-          <Stat emoji="🎓" value={certs.length} label={`certificats · ${completed} cours terminés`} />
+          <Stat icon={Flame} value={profile.streak} label={`jours de série (record : ${profile.bestStreak})`} />
+          <Stat icon={GraduationCap} value={certs.length} label={`certificats · ${completed} formations terminées`} />
         </div>
 
         {profile.bio && <p className="card mt-6 p-6 leading-relaxed text-ink-soft">{profile.bio}</p>}
 
         {taught.length > 0 && (
           <section className="mt-12">
-            <h2 className="mb-5 text-2xl font-extrabold">Cours de {profile.name.split(" ")[0]}</h2>
+            <h2 className="mb-5 text-2xl font-bold">Cours de {profile.name.split(" ")[0]}</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {taught.map((c) => <CourseCard key={c.id} course={c} currency={currency} />)}
             </div>
@@ -82,13 +83,13 @@ export default async function PublicProfile({ params }: Props) {
 
         {certs.length > 0 && (
           <section className="mt-12">
-            <h2 className="mb-5 text-2xl font-extrabold">Certificats</h2>
+            <h2 className="mb-5 text-2xl font-bold">Certificats</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {certs.map((c) => (
                 <Link key={c.id} href={`/certificates/${c.code}`} className="card flex items-center gap-4 p-4 transition hover:-translate-y-0.5">
                   <CourseCover course={c.course} size="sm" className="h-14 w-14 shrink-0 rounded-2xl" />
                   <div className="min-w-0">
-                    <p className="truncate font-extrabold">{c.course.title}</p>
+                    <p className="truncate font-bold">{c.course.title}</p>
                     <p className="text-xs font-semibold text-muted">{formatDate(c.issuedAt)} · {c.score} %</p>
                   </div>
                 </Link>
@@ -98,13 +99,13 @@ export default async function PublicProfile({ params }: Props) {
         )}
 
         <section className="mt-12">
-          <h2 className="mb-5 text-2xl font-extrabold">Badges ({badges.length})</h2>
+          <h2 className="mb-5 text-2xl font-bold">Badges ({badges.length})</h2>
           {badges.length ? (
             <div className="flex flex-wrap gap-3">
               {badges.map(({ badge }) => (
                 <div key={badge.id} className="card flex items-center gap-3 py-2 pl-2 pr-4" title={badge.description}>
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-surface-2 text-2xl">{badge.emoji}</span>
-                  <span className="text-sm font-extrabold">{badge.name}</span>
+                  <BadgeMedal icon={badge.icon} color={badge.color} size={38} />
+                  <span className="text-sm font-semibold">{badge.name}</span>
                 </div>
               ))}
             </div>
@@ -117,13 +118,15 @@ export default async function PublicProfile({ params }: Props) {
   );
 }
 
-function Stat({ emoji, value, label }: { emoji: string; value: number; label: string }) {
+function Stat({ icon: StatIcon, value, label }: { icon: LucideIcon; value: number; label: string }) {
   return (
     <div className="card flex items-center gap-4 p-5">
-      <span className="text-4xl">{emoji}</span>
+      <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand-soft text-brand-ink">
+        <StatIcon className="h-5 w-5" />
+      </span>
       <div>
-        <p className="font-display text-3xl font-extrabold">{value}</p>
-        <p className="text-xs font-bold text-muted">{label}</p>
+        <p className="text-2xl font-bold tracking-tight">{value}</p>
+        <p className="text-xs text-muted">{label}</p>
       </div>
     </div>
   );

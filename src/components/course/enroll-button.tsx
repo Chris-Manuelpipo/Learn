@@ -17,7 +17,7 @@ export function EnrollButton({ courseId, slug, free, loggedIn, priceLabel }: { c
   if (!free) {
     return (
       <Link href={`/checkout/${slug}`} className={buttonClass("primary", "lg", "mt-5 w-full")}>
-        Acheter le cours
+        Acheter la formation
       </Link>
     );
   }

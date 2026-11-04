@@ -10,9 +10,9 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
     <>
       <RegisterForm next={next} />
       <p className="mt-8 text-center text-sm font-semibold text-muted">
-        Déjà inscrit ?{" "}
-        <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-extrabold text-brand hover:underline">
-          Connecte-toi
+        Vous avez déjà un compte ?{" "}
+        <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-semibold text-brand hover:underline">
+          Se connecter
         </Link>
       </p>
     </>

@@ -21,7 +21,7 @@ export function Logo({ className, href = "/" }: { className?: string; href?: str
   return (
     <Link href={href} className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Learn — accueil">
       <LogoMark className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105" />
-      <span className="font-display text-2xl font-extrabold tracking-tight">learn</span>
+      <span className="text-2xl font-bold tracking-tight">learn</span>
     </Link>
   );
 }

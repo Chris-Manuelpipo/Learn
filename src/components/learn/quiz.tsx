@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, RotateCcw, X } from "lucide-react";
+import { Check, GraduationCap, RotateCcw, Trophy, X } from "lucide-react";
 import { toast } from "sonner";
 import { checkAnswer, submitQuiz, type QuizResult } from "@/app/actions/learn";
-import { useCelebrate, fireConfetti } from "@/components/gamification/celebration";
+import { useCelebrate } from "@/components/gamification/celebration";
 import { Button, buttonClass } from "@/components/ui/button";
 import { ProgressBar, ProgressRing } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 export type QuizData = { id: string; title: string; passingScore: number; questions: { id: string; text: string; multiple: boolean; options: { id: string; text: string }[] }[] };
 type Feedback = { correct: boolean; correctIds: string[]; explanation: string | null };
 
-const PRAISE = ["Bien joué !", "Excellent !", "Parfait !", "Tu gères !", "Bravo !"];
 
 export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizData; mode: "practice" | "exam"; onPassed?: (r: QuizResult) => void; nextHref?: string | null; readOnly?: boolean }) {
   const [started, setStarted] = useState(mode === "practice");
@@ -47,8 +46,7 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
       if ("error" in res) return void toast.error(res.error);
       setResult(res);
       if (res.passed) {
-        fireConfetti(res.score === 100);
-        celebrate(res.reward, { big: !!res.certificateCode });
+        celebrate(res.reward);
         onPassed?.(res);
       }
     });
@@ -96,10 +94,12 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
   if (!started) {
     return (
       <div className="card mx-auto max-w-xl p-8 text-center">
-        <p className="text-6xl">🏆</p>
-        <h2 className="mt-4 text-3xl font-extrabold">{quiz.title}</h2>
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
+          <Trophy className="h-6 w-6" />
+        </span>
+        <h2 className="mt-4 text-2xl font-bold">{quiz.title}</h2>
         <p className="mt-3 text-muted">
-          {quiz.questions.length} questions · {quiz.passingScore} % de bonnes réponses requis. Prends ton temps, tu peux naviguer entre les questions avant de valider.
+          {quiz.questions.length} questions · {quiz.passingScore} % de bonnes réponses requis. Prenez votre temps : vous pouvez revenir sur vos réponses avant de valider.
         </p>
         <Button size="lg" className="mt-6" onClick={() => setStarted(true)}>
           Commencer l'examen
@@ -112,24 +112,24 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
     return (
       <div className="mx-auto max-w-2xl">
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="card p-8 text-center">
-          <ProgressRing value={result.score} size={140} stroke={14} color={result.passed ? "var(--color-mint)" : "var(--color-coral)"}>
-            <span className="font-display text-4xl font-extrabold">{result.score}%</span>
+          <ProgressRing value={result.score} size={140} stroke={14} color={result.passed ? "var(--brand)" : "var(--color-coral)"}>
+            <span className="text-4xl font-bold tracking-tight">{result.score} %</span>
           </ProgressRing>
-          <h2 className="mt-5 text-3xl font-extrabold">{result.passed ? (result.score === 100 ? "Sans faute ! 🎯" : "Quiz réussi ! 🎉") : "Presque ! 💪"}</h2>
+          <h2 className="mt-5 text-2xl font-bold">{result.passed ? (result.score === 100 ? "Score parfait" : "Quiz réussi") : "Quiz non validé"}</h2>
           <p className="mt-2 text-muted">
             {result.passed
-              ? `Tu as obtenu ${result.score} %. Ta mémoire te dit merci.`
-              : `Il faut ${quiz.passingScore} % pour valider. Relis les explications ci-dessous et retente : se tromper aide à mieux retenir !`}
+              ? `Vous avez obtenu ${result.score} %.`
+              : `Il faut ${quiz.passingScore} % pour valider. Relisez les explications ci-dessous puis réessayez : se tromper aide à mieux retenir.`}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             {!result.passed && (
-              <Button variant="coral" size="lg" onClick={reset}>
+              <Button variant="primary" size="lg" onClick={reset}>
                 <RotateCcw className="h-5 w-5" /> Réessayer
               </Button>
             )}
             {result.certificateCode && (
               <Link href={`/certificates/${result.certificateCode}`} className={buttonClass("sun", "lg")}>
-                🎓 Voir mon certificat
+                <GraduationCap className="h-5 w-5" /> Voir mon certificat
               </Link>
             )}
             {result.passed && nextHref && (
@@ -147,15 +147,15 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
             return (
               <div key={qq.id} className="card p-5">
                 <div className="flex gap-3">
-                  <span className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-full text-white", ok ? "bg-mint" : "bg-coral")}>{ok ? <Check className="h-4 w-4" strokeWidth={3} /> : <X className="h-4 w-4" strokeWidth={3} />}</span>
+                  <span className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-full text-white", ok ? "bg-brand" : "bg-coral")}>{ok ? <Check className="h-4 w-4" strokeWidth={3} /> : <X className="h-4 w-4" strokeWidth={3} />}</span>
                   <div className="min-w-0">
-                    <p className="font-extrabold">
+                    <p className="font-bold">
                       {i + 1}. {qq.text}
                     </p>
                     <p className="mt-1 text-sm text-ink-soft">
-                      Bonne réponse : <span className="font-bold text-mint">{qq.options.filter((o) => right.includes(o.id)).map((o) => o.text).join(", ")}</span>
+                      Bonne réponse : <span className="font-semibold text-brand-ink">{qq.options.filter((o) => right.includes(o.id)).map((o) => o.text).join(", ")}</span>
                     </p>
-                    {result.explanations[qq.id] && <p className="mt-1 text-sm text-muted">💡 {result.explanations[qq.id]}</p>}
+                    {result.explanations[qq.id] && <p className="mt-1 text-sm text-muted">{result.explanations[qq.id]}</p>}
                   </div>
                 </div>
               </div>
@@ -169,16 +169,16 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6 flex items-center gap-4">
-        <ProgressBar value={((index + (feedback ? 1 : 0)) / quiz.questions.length) * 100} height={14} color="linear-gradient(90deg,#1fd1a0,#14b8c4)" />
-        <span className="shrink-0 text-sm font-extrabold text-muted">
+        <ProgressBar value={((index + (feedback ? 1 : 0)) / quiz.questions.length) * 100} height={8} />
+        <span className="shrink-0 text-sm font-bold text-muted">
           {index + 1}/{quiz.questions.length}
         </span>
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div key={q.id} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.22 }}>
-          <p className="text-sm font-extrabold uppercase tracking-wider text-brand">{mode === "exam" ? "Examen final" : "Question"}</p>
-          <h2 className="mt-2 text-2xl font-extrabold leading-snug sm:text-3xl">{q.text}</h2>
+          <p className="text-sm font-bold uppercase tracking-wider text-brand">{mode === "exam" ? "Examen final" : "Question"}</p>
+          <h2 className="mt-2 text-2xl font-bold leading-snug sm:text-3xl">{q.text}</h2>
           {q.multiple && <p className="mt-1 text-sm font-semibold text-muted">Plusieurs réponses possibles</p>}
           <div className="mt-6 grid gap-3">
             {q.options.map((o, i) => {
@@ -192,17 +192,17 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
                   onClick={() => toggle(o.id)}
                   animate={state === "wrong" ? { x: [0, -8, 8, -6, 6, 0] } : {}}
                   className={cn(
-                    "flex items-center gap-4 rounded-2xl border-2 p-4 text-left text-[1.02rem] font-semibold transition",
+                    "flex items-center gap-4 rounded-xl border p-4 text-left text-[1.02rem] font-medium transition",
                     state === "idle" && "border-line bg-surface hover:border-line-strong hover:bg-surface-2",
-                    state === "sel" && "border-brand bg-brand-soft shadow-[0_4px_0_var(--brand)]",
-                    state === "right" && "border-mint bg-mint/12 shadow-[0_4px_0_#0ea47b]",
-                    state === "wrong" && "border-coral bg-coral/10 shadow-[0_4px_0_#d6402c]",
+                    state === "sel" && "border-brand bg-brand-soft ring-1 ring-brand",
+                    state === "right" && "border-brand bg-brand-soft ring-1 ring-brand",
+                    state === "wrong" && "border-coral bg-coral/8 ring-1 ring-coral",
                   )}
                 >
                   <span
                     className={cn(
-                      "grid h-8 w-8 shrink-0 place-items-center rounded-xl border-2 text-sm font-extrabold",
-                      state === "sel" ? "border-brand bg-brand text-on-brand" : state === "right" ? "border-mint bg-mint text-white" : state === "wrong" ? "border-coral bg-coral text-white" : "border-line-strong text-muted",
+                      "grid h-8 w-8 shrink-0 place-items-center rounded-lg border text-sm font-semibold",
+                      state === "sel" ? "border-brand bg-brand text-on-brand" : state === "right" ? "border-brand bg-brand text-on-brand" : state === "wrong" ? "border-coral bg-coral text-white" : "border-line-strong text-muted",
                     )}
                   >
                     {state === "right" ? <Check className="h-4 w-4" strokeWidth={3} /> : state === "wrong" ? <X className="h-4 w-4" strokeWidth={3} /> : i + 1}
@@ -221,7 +221,7 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
             ← Précédente
           </Button>
         ) : (
-          <span className="hidden text-xs font-bold text-muted sm:block">Astuce : touches 1-4 puis Entrée</span>
+          <span className="hidden text-xs text-muted sm:block">Raccourcis : touches 1 à 4, puis Entrée</span>
         )}
         {!feedback && (
           <Button size="lg" onClick={check} disabled={!selected.length} loading={pending} className="ml-auto min-w-40">
@@ -236,19 +236,19 @@ export function Quiz({ quiz, mode, onPassed, nextHref, readOnly }: { quiz: QuizD
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
-            className={cn("mt-6 rounded-3xl border-2 p-5", feedback.correct ? "border-mint/50 bg-mint/12" : "border-coral/40 bg-coral/10")}
+            className={cn("mt-6 rounded-2xl border p-5", feedback.correct ? "border-brand/40 bg-brand-soft" : "border-coral/40 bg-coral/8")}
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="flex flex-1 items-start gap-3">
-                <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-full text-xl text-white", feedback.correct ? "bg-mint" : "bg-coral")}>{feedback.correct ? "✓" : "✗"}</span>
+                <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-full text-white", feedback.correct ? "bg-brand" : "bg-coral")}>{feedback.correct ? <Check className="h-5 w-5" strokeWidth={3} /> : <X className="h-5 w-5" strokeWidth={3} />}</span>
                 <div>
-                  <p className={cn("font-display text-xl font-extrabold", feedback.correct ? "text-[#0b8a6a] dark:text-mint" : "text-coral")}>
-                    {feedback.correct ? PRAISE[index % PRAISE.length] : "Pas tout à fait…"}
+                  <p className={cn("text-lg font-bold", feedback.correct ? "text-brand-ink" : "text-coral")}>
+                    {feedback.correct ? "Bonne réponse" : "Réponse incorrecte"}
                   </p>
                   {feedback.explanation && <p className="mt-1 text-sm font-medium text-ink-soft">{feedback.explanation}</p>}
                 </div>
               </div>
-              <Button size="lg" variant={feedback.correct ? "mint" : "coral"} onClick={proceed} loading={pending} autoFocus>
+              <Button size="lg" variant={feedback.correct ? "primary" : "secondary"} onClick={proceed} loading={pending} autoFocus>
                 {isLast ? "Voir mon score" : "Continuer"}
               </Button>
             </div>

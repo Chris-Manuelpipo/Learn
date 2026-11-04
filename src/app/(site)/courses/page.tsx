@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { Prisma } from "@prisma/client";
+import { SearchX } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
@@ -68,9 +69,9 @@ export default async function CoursesPage({ searchParams }: { searchParams: Prom
       <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-brand-soft/70 to-transparent">
         <div className="bg-dots absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         <Container className="relative py-12 sm:py-16">
-          <p className="mb-2 text-sm font-extrabold uppercase tracking-[0.14em] text-brand">{activeCategory ? `${activeCategory.icon} Catégorie` : "📚 Catalogue"}</p>
-          <h1 className="text-4xl font-extrabold sm:text-5xl">{activeCategory ? activeCategory.name : sp.q ? `Résultats pour « ${sp.q} »` : "Trouve ton prochain cours"}</h1>
-          <p className="mt-3 text-lg text-muted">{formatNumber(total)} cours pour apprendre à ton rythme, du grand débutant à l'expert.</p>
+          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-brand-ink">{activeCategory ? "Catégorie" : "Catalogue"}</p>
+          <h1 className="text-4xl font-bold sm:text-5xl">{activeCategory ? activeCategory.name : sp.q ? `Résultats pour « ${sp.q} »` : "Trouvez votre prochaine formation"}</h1>
+          <p className="mt-3 text-lg text-muted">{formatNumber(total)} formations pour progresser à votre rythme, du premier pas au niveau expert.</p>
           <div className="mt-6 max-w-2xl">
             <CatalogSearch initial={sp.q ?? ""} />
           </div>
@@ -78,11 +79,11 @@ export default async function CoursesPage({ searchParams }: { searchParams: Prom
       </section>
 
       <Container className="grid gap-8 py-10 lg:grid-cols-[260px_1fr]">
-        <CatalogFilters categories={categories.map((c) => ({ slug: c.slug, name: c.name, icon: c.icon, count: c._count.courses }))} />
+        <CatalogFilters categories={categories.map((c) => ({ slug: c.slug, name: c.name, icon: c.icon, color: c.color, count: c._count.courses }))} />
         <div>
           <div className="mb-6 flex items-center justify-between gap-4">
             <p className="text-sm font-semibold text-muted">
-              <span className="font-extrabold text-ink">{formatNumber(total)}</span> {total > 1 ? "cours trouvés" : "cours trouvé"}
+              <span className="font-bold text-ink">{formatNumber(total)}</span> {total > 1 ? "formations trouvées" : "formation trouvée"}
             </p>
             <CatalogSort />
           </div>
@@ -93,7 +94,7 @@ export default async function CoursesPage({ searchParams }: { searchParams: Prom
               ))}
             </div>
           ) : (
-            <EmptyState emoji="🔎" title="Aucun cours ne correspond" text="Essaie d'élargir tes filtres ou une autre recherche. Il y a forcément un cours pour toi !" />
+            <EmptyState icon={SearchX} title="Aucune formation ne correspond" text="Élargissez vos filtres ou essayez une autre recherche." />
           )}
           <Pagination page={page} pages={Math.ceil(total / PER_PAGE)} />
         </div>

@@ -8,7 +8,7 @@ import { ProgressBar } from "@/components/ui/progress";
 import { logout } from "@/app/actions/auth";
 
 type Props = {
-  user: { name: string; email: string; username: string; role: string; avatarEmoji: string; avatarColor: string; avatarUrl: string | null };
+  user: { name: string; email: string; username: string; role: string; avatarColor: string; avatarUrl: string | null };
   level: { level: number; title: string; percent: number; current: number; needed: number };
 };
 
@@ -20,16 +20,16 @@ export function UserMenu({ user, level }: Props) {
         <Avatar user={user} size={40} />
       </DM.Trigger>
       <DM.Portal>
-        <DM.Content align="end" sideOffset={8} className="z-[60] w-72 rounded-3xl border-2 border-line bg-surface p-2 shadow-[var(--shadow-pop)]">
+        <DM.Content align="end" sideOffset={8} className="z-[60] w-72 rounded-3xl border border-line bg-surface p-2 shadow-[var(--shadow-pop)]">
           <div className="flex items-center gap-3 p-3">
             <Avatar user={user} size={48} />
             <div className="min-w-0">
-              <p className="truncate font-extrabold">{user.name}</p>
+              <p className="truncate font-bold">{user.name}</p>
               <p className="truncate text-xs text-muted">{user.email}</p>
             </div>
           </div>
           <div className="mx-1 mb-2 rounded-2xl bg-surface-2 p-3">
-            <div className="mb-2 flex items-center justify-between text-xs font-extrabold">
+            <div className="mb-2 flex items-center justify-between text-xs font-bold">
               <span>
                 Niv. {level.level} · <span className="text-brand">{level.title}</span>
               </span>

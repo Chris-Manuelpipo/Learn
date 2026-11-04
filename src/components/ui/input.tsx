@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes, type
 import { cn } from "@/lib/utils";
 
 const base =
-  "w-full rounded-2xl border-2 border-line bg-surface px-4 text-ink placeholder:text-muted/70 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:opacity-60";
+  "w-full rounded-2xl border border-line bg-surface px-4 text-ink placeholder:text-muted/70 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:opacity-60";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & { icon?: ReactNode }>(function Input(
   { className, icon, ...props },

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BadgeCheck, Brain, Flame, GraduationCap, Repeat, Sparkles, Timer } from "lucide-react";
+import { ArrowRight, BadgeCheck, Brain, CalendarCheck, GraduationCap, Timer, Trophy } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
@@ -8,140 +8,123 @@ import { Container, SectionTitle } from "@/components/ui/section";
 import { buttonClass } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Stars } from "@/components/ui/stars";
+import { IconTile } from "@/components/ui/icon";
+import { BadgeMedal } from "@/components/ui/badge-medal";
 import { CourseCard, courseCardSelect } from "@/components/course/course-card";
+import { coverSrc } from "@/components/course/course-cover";
 import { HeroVisual } from "@/components/home/hero-visual";
-import { palette } from "@/lib/colors";
 import { formatNumber } from "@/lib/utils";
 import { levelInfo } from "@/lib/gamification";
+import { BADGES } from "@/lib/badges";
+
+const METHOD = [
+  { icon: Timer, title: "Des leçons courtes", text: "Des vidéos de 5 à 12 minutes : l'attention reste intacte et vous progressez même entre deux rendez-vous.", stat: "8 min en moyenne" },
+  { icon: Brain, title: "Le rappel actif", text: "Un quiz à la fin de chaque chapitre : se tester est ce qui ancre le plus durablement les connaissances.", stat: "1 quiz par chapitre" },
+  { icon: CalendarCheck, title: "La régularité", text: "Objectif quotidien et série de jours : quelques minutes chaque jour valent mieux qu'une longue session.", stat: "15 min par jour" },
+  { icon: GraduationCap, title: "La certification", text: "Un examen final et un certificat vérifiable par QR code, prêt à être ajouté à votre profil LinkedIn.", stat: "Vérifiable en ligne" },
+];
 
 export default async function HomePage() {
   const user = await getCurrentUser();
   if (user) redirect("/dashboard");
 
   const currency = await getCurrency();
-  const [categories, popular, free, stats, reviews, learners, top] = await Promise.all([
+  const [categories, popular, free, stats, reviews, learners, top, heroInstructor] = await Promise.all([
     db.category.findMany({ include: { _count: { select: { courses: { where: { status: "PUBLISHED" } } } } } }),
     db.course.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ studentsCount: "desc" }], take: 8, select: courseCardSelect }),
     db.course.findMany({ where: { status: "PUBLISHED", price: 0 }, orderBy: { ratingAvg: "desc" }, take: 4, select: courseCardSelect }),
-    Promise.all([
-      db.course.count({ where: { status: "PUBLISHED" } }),
-      db.user.count(),
-      db.certificate.count(),
-      db.review.aggregate({ _avg: { rating: true } }),
-    ]),
-    db.review.findMany({ where: { rating: 5 }, take: 6, orderBy: { createdAt: "desc" }, include: { user: true, course: { select: { title: true } } } }),
-    db.user.findMany({ where: { role: "STUDENT" }, take: 5, orderBy: { xp: "desc" } }),
+    Promise.all([db.course.count({ where: { status: "PUBLISHED" } }), db.user.count(), db.certificate.count(), db.review.aggregate({ _avg: { rating: true } })]),
+    db.review.findMany({ where: { rating: 5, user: { avatarUrl: { not: null } } }, take: 6, orderBy: { createdAt: "desc" }, include: { user: true, course: { select: { title: true } } } }),
+    db.user.findMany({ where: { role: "STUDENT", avatarUrl: { not: null } }, take: 5, orderBy: { xp: "desc" } }),
     db.user.findMany({ orderBy: { xp: "desc" }, take: 5 }),
+    db.user.findFirst({ where: { email: "formateur@learn.dev" }, select: { avatarUrl: true } }),
   ]);
   const [courseCount, userCount, certCount, avg] = stats;
+  const rating = avg._avg.rating ?? 0;
+  const showcase = ["first-step", "streak-7", "quiz-ace", "certified"].map((slug) => BADGES.find((b) => b.slug === slug)!);
 
   return (
     <>
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="bg-dots absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-        <Container className="relative grid items-center gap-10 py-14 lg:grid-cols-[1.05fr_1fr] lg:py-20">
+        <Container className="relative grid items-center gap-12 py-14 lg:grid-cols-[1.05fr_1fr] lg:py-20">
           <div>
-            <Link href="/courses?certified=1" className="group mb-6 inline-flex items-center gap-2 rounded-full border-2 border-line bg-surface py-1.5 pl-1.5 pr-4 text-sm font-bold shadow-sm transition hover:border-brand">
-              <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-extrabold text-on-brand">Nouveau</span>
+            <Link href="/courses?certified=1" className="group mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-3.5 text-sm font-medium text-ink-soft shadow-sm transition hover:border-line-strong">
+              <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-ink">Nouveau</span>
               Certificats vérifiables par QR code
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
             </Link>
-            <h1 className="text-5xl font-extrabold leading-[1.02] sm:text-6xl lg:text-7xl">
-              Apprends ce qui te <span className="text-gradient">fait vibrer</span>, <span className="squiggle">à ton rythme</span>.
+            <h1 className="text-[2.75rem] font-bold leading-[1.05] sm:text-6xl">
+              Apprenez les compétences qui comptent, <span className="text-brand">à votre rythme</span>.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
-              Des cours vidéo courts, des quiz qui font travailler ta mémoire et des certificats qui comptent. {formatNumber(courseCount)} cours en français, pensés pour que ça reste.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+              {formatNumber(courseCount)} formations en français, conçues par des experts : vidéos courtes, quiz réguliers et certificats reconnus pour progresser concrètement.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/register" className={buttonClass("primary", "lg")}>
-                Commencer gratuitement <ArrowRight className="h-5 w-5" />
+                Créer un compte gratuit <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/courses" className={buttonClass("secondary", "lg")}>
                 Explorer le catalogue
               </Link>
             </div>
             <div className="mt-10 flex items-center gap-4">
-              <div className="flex -space-x-3">
+              <div className="flex -space-x-2.5">
                 {learners.map((u) => (
-                  <Avatar key={u.id} user={u} size={44} ring />
+                  <Avatar key={u.id} user={u} size={40} ring />
                 ))}
               </div>
               <div className="text-sm">
                 <div className="flex items-center gap-1.5">
-                  <Stars value={avg._avg.rating ?? 5} />
-                  <span className="font-extrabold">{(avg._avg.rating ?? 5).toFixed(1)}/5</span>
+                  <Stars value={rating} />
+                  <span className="font-semibold">{rating.toFixed(1)}/5</span>
                 </div>
-                <p className="font-semibold text-muted">
-                  Rejoins <span className="font-extrabold text-ink">{formatNumber(userCount)}</span> apprenants motivés
+                <p className="text-muted">
+                  Plus de <span className="font-semibold text-ink">{formatNumber(userCount)}</span> apprenants nous font confiance
                 </p>
               </div>
             </div>
           </div>
-          <HeroVisual />
+          <HeroVisual photo={coverSrc("https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=70&w=1200&h=750", 720)} instructorPhoto={heroInstructor?.avatarUrl ?? null} />
         </Container>
       </section>
 
       {/* CATÉGORIES */}
-      <section className="border-y border-line bg-surface/60 py-6">
+      <section className="border-y border-line bg-surface py-5">
         <Container>
-          <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4">
-            {categories.map((c) => {
-              const p = palette(c.color);
-              return (
-                <Link
-                  key={c.id}
-                  href={`/courses?category=${c.slug}`}
-                  className="group flex shrink-0 items-center gap-3 rounded-2xl border-2 border-line bg-surface py-2 pl-2 pr-5 transition hover:-translate-y-0.5 hover:border-transparent hover:shadow-[var(--shadow-soft)]"
-                >
-                  <span className="grid h-11 w-11 place-items-center rounded-xl text-2xl transition group-hover:scale-110 group-hover:-rotate-6" style={{ background: `color-mix(in srgb, ${p.from} 18%, transparent)` }}>
-                    {c.icon}
-                  </span>
-                  <span>
-                    <span className="block text-sm font-extrabold">{c.name}</span>
-                    <span className="block text-xs font-semibold text-muted">{c._count.courses} cours</span>
-                  </span>
-                </Link>
-              );
-            })}
+          <div className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4">
+            {categories.map((c) => (
+              <Link
+                key={c.id}
+                href={`/courses?category=${c.slug}`}
+                className="group flex shrink-0 items-center gap-3 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 transition hover:border-line-strong hover:bg-surface-2"
+              >
+                <IconTile name={c.icon} color={c.color} size={38} />
+                <span>
+                  <span className="block text-sm font-semibold">{c.name}</span>
+                  <span className="block text-xs text-muted">{c._count.courses} formations</span>
+                </span>
+              </Link>
+            ))}
           </div>
         </Container>
       </section>
 
-      {/* SCIENCES COGNITIVES */}
-      <section className="py-20 sm:py-28">
+      {/* MÉTHODE */}
+      <section className="py-20 sm:py-24">
         <Container>
-          <SectionTitle
-            eyebrow="Une méthode qui marche"
-            title={
-              <>
-                Conçu pour ton cerveau, <span className="text-brand">pas contre lui</span>
-              </>
-            }
-            text="On s'appuie sur ce que la recherche en sciences cognitives sait de la mémoire et de la motivation."
-          />
+          <SectionTitle eyebrow="Notre méthode" title="Une pédagogie fondée sur les sciences cognitives" text="Chaque formation s'appuie sur ce que la recherche sait de la mémoire et de la motivation." />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: Timer, color: "violet", title: "Micro-leçons", text: "Des vidéos de 5 à 12 minutes. Ton attention reste au top et tu avances même entre deux cours.", stat: "≈ 8 min" },
-              { icon: Brain, color: "pink", title: "Rappel actif", text: "Un quiz à la fin de chaque chapitre : récupérer l'information est ce qui l'ancre durablement.", stat: "+50 % de rétention" },
-              { icon: Flame, color: "coral", title: "Habitudes", text: "Objectif quotidien, séries de jours et rappels : la régularité bat l'intensité.", stat: "15 min / jour" },
-              { icon: GraduationCap, color: "sun", title: "Certificats", text: "Un examen final et un certificat vérifiable par QR code, à partager sur LinkedIn.", stat: "100 % vérifiable" },
-            ].map((f, i) => {
-              const p = palette(f.color);
-              return (
-                <div key={f.title} className="card group relative overflow-hidden p-6 transition hover:-translate-y-1">
-                  <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-15 transition group-hover:scale-125" style={{ background: p.from }} />
-                  <div className="mb-5 grid h-14 w-14 place-items-center rounded-2xl text-white shadow-lg" style={{ background: `linear-gradient(135deg, ${p.from}, ${p.to})`, transform: `rotate(${i % 2 ? 4 : -4}deg)` }}>
-                    <f.icon className="h-7 w-7" />
-                  </div>
-                  <h3 className="text-xl font-extrabold">{f.title}</h3>
-                  <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">{f.text}</p>
-                  <p className="mt-4 inline-block rounded-full bg-surface-2 px-3 py-1 text-xs font-extrabold" style={{ color: p.ink }}>
-                    {f.stat}
-                  </p>
+            {METHOD.map((f) => (
+              <div key={f.title} className="card p-6">
+                <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-brand-soft text-brand-ink">
+                  <f.icon className="h-5 w-5" />
                 </div>
-              );
-            })}
+                <h3 className="text-lg font-bold">{f.title}</h3>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">{f.text}</p>
+                <p className="mt-5 border-t border-line pt-4 text-sm font-semibold text-ink-soft">{f.stat}</p>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
@@ -150,11 +133,11 @@ export default async function HomePage() {
       <section className="pb-20">
         <Container>
           <SectionTitle
-            eyebrow="Les plus suivis"
-            title="Les cours qui cartonnent 🔥"
+            eyebrow="Les plus suivies"
+            title="Formations populaires"
             action={
-              <Link href="/courses?sort=popular" className={buttonClass("soft", "md")}>
-                Tout voir <ArrowRight className="h-4 w-4" />
+              <Link href="/courses?sort=popular" className={buttonClass("secondary", "md")}>
+                Voir tout <ArrowRight className="h-4 w-4" />
               </Link>
             }
           />
@@ -166,76 +149,65 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* STATS */}
-      <section className="py-6">
+      {/* CHIFFRES */}
+      <section className="py-4">
         <Container>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-grad-a to-grad-b px-6 py-12 text-white sm:px-12">
-            <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full bg-white/10" />
-            <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-sun/30 blur-2xl" />
-            <div className="relative grid gap-8 text-center sm:grid-cols-4">
-              {[
-                [formatNumber(courseCount), "cours disponibles"],
-                [formatNumber(userCount), "apprenants"],
-                [formatNumber(certCount), "certificats délivrés"],
-                [`${(avg._avg.rating ?? 0).toFixed(1)}/5`, "note moyenne"],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <p className="font-display text-4xl font-extrabold sm:text-5xl">{v}</p>
-                  <p className="mt-1 font-semibold text-white/75">{l}</p>
-                </div>
-              ))}
-            </div>
+          <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-white/10 text-white sm:grid-cols-4" style={{ background: "var(--night)" }}>
+            {[
+              [formatNumber(courseCount), "formations disponibles"],
+              [formatNumber(userCount), "apprenants inscrits"],
+              [formatNumber(certCount), "certificats délivrés"],
+              [`${rating.toFixed(1)}/5`, "note moyenne des avis"],
+            ].map(([v, l]) => (
+              <div key={l} className="px-6 py-10 text-center">
+                <p className="text-4xl font-bold tracking-tight">{v}</p>
+                <p className="mt-1.5 text-sm text-white/65">{l}</p>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
 
-      {/* GAMIFICATION */}
-      <section className="py-20 sm:py-28">
+      {/* PROGRESSION */}
+      <section className="py-20 sm:py-24">
         <Container className="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <p className="mb-2 text-sm font-extrabold uppercase tracking-[0.14em] text-brand">Apprendre devient un jeu</p>
-            <h2 className="text-4xl font-extrabold sm:text-5xl">
-              Gagne de l'XP, monte de niveau, <span className="text-gradient">grimpe au classement</span>.
-            </h2>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-brand-ink">Suivi de progression</p>
+            <h2 className="text-3xl font-bold sm:text-[2.25rem] sm:leading-tight">Restez motivé, jour après jour.</h2>
             <p className="mt-5 text-lg leading-relaxed text-muted">
-              Chaque leçon terminée, chaque quiz réussi te rapporte de l'XP. Débloque des badges, entretiens ta série de jours et mesure-toi aux autres apprenants chaque semaine.
+              Chaque leçon terminée et chaque quiz réussi vous rapportent des points d'expérience. Suivez votre série de jours, obtenez des badges et comparez votre progression à celle des autres apprenants.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                ["👣", "Premier pas"],
-                ["🔥", "Semaine de feu"],
-                ["🎯", "Sans faute"],
-                ["🎓", "Certifié"],
-              ].map(([e, n], i) => (
-                <div key={n} className="card flex flex-col items-center gap-2 p-4 text-center" style={{ transform: `rotate(${[-3, 2, -2, 3][i]}deg)` }}>
-                  <span className="text-4xl">{e}</span>
-                  <span className="text-xs font-extrabold">{n}</span>
+              {showcase.map((b) => (
+                <div key={b.slug} className="card flex flex-col items-center gap-3 p-4 text-center">
+                  <BadgeMedal icon={b.icon} color={b.color} size={52} />
+                  <span className="text-xs font-semibold">{b.name}</span>
                 </div>
               ))}
             </div>
-            <Link href="/leaderboard" className={buttonClass("primary", "lg", "mt-8")}>
-              Voir le classement <Sparkles className="h-5 w-5" />
+            <Link href="/leaderboard" className={buttonClass("secondary", "lg", "mt-8")}>
+              <Trophy className="h-4 w-4" /> Voir le classement
             </Link>
           </div>
           <div className="card p-3 sm:p-5">
             <div className="flex items-center justify-between px-3 py-2">
-              <p className="font-display text-xl font-extrabold">🏆 Top apprenants</p>
-              <span className="rounded-full bg-sun/20 px-3 py-1 text-xs font-extrabold text-[#9a6200] dark:text-sun">Tous les temps</span>
+              <p className="text-lg font-bold">Meilleurs apprenants</p>
+              <span className="rounded-full bg-surface-2 px-3 py-1 text-xs font-semibold text-muted">Depuis le début</span>
             </div>
-            <ol className="mt-2 space-y-2">
+            <ol className="mt-2 space-y-1.5">
               {top.map((u, i) => {
                 const lv = levelInfo(u.xp);
                 return (
-                  <li key={u.id} className={`flex items-center gap-4 rounded-2xl p-3 ${i === 0 ? "bg-sun/15" : "bg-surface-2"}`}>
-                    <span className="w-8 text-center font-display text-xl font-extrabold text-muted">{["🥇", "🥈", "🥉"][i] ?? i + 1}</span>
-                    <Avatar user={u} size={44} />
+                  <li key={u.id} className="flex items-center gap-4 rounded-2xl p-3 transition hover:bg-surface-2">
+                    <span className="w-6 text-center text-sm font-bold text-muted">{i + 1}</span>
+                    <Avatar user={u} size={42} />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-extrabold">{u.name}</p>
-                      <p className="text-xs font-semibold text-muted">
+                      <p className="truncate font-semibold">{u.name}</p>
+                      <p className="text-xs text-muted">
                         Niveau {lv.level} · {lv.title}
                       </p>
                     </div>
-                    <span className="font-display font-extrabold text-brand">{formatNumber(u.xp)} XP</span>
+                    <span className="text-sm font-semibold text-ink-soft">{formatNumber(u.xp)} XP</span>
                   </li>
                 );
               })}
@@ -244,15 +216,15 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* GRATUITS */}
+      {/* GRATUITES */}
       <section className="pb-20">
         <Container>
           <SectionTitle
-            eyebrow="Zéro franc, zéro excuse"
-            title="Commence avec un cours gratuit 🎁"
+            eyebrow="Pour commencer"
+            title="Formations gratuites"
             action={
-              <Link href="/courses?price=free" className={buttonClass("soft", "md")}>
-                Cours gratuits <ArrowRight className="h-4 w-4" />
+              <Link href="/courses?price=free" className={buttonClass("secondary", "md")}>
+                Toutes les formations gratuites <ArrowRight className="h-4 w-4" />
               </Link>
             }
           />
@@ -265,18 +237,18 @@ export default async function HomePage() {
       </section>
 
       {/* AVIS */}
-      <section className="bg-bg-soft py-20 sm:py-24">
+      <section className="border-y border-line bg-bg-soft py-20 sm:py-24">
         <Container>
-          <SectionTitle eyebrow="Ils en parlent" title="Des apprenants qui ont pris goût à apprendre 💬" />
+          <SectionTitle eyebrow="Témoignages" title="Ce qu'en disent les apprenants" />
           <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
             {reviews.map((r) => (
               <figure key={r.id} className="card mb-5 break-inside-avoid p-6">
-                <Stars value={r.rating} size={16} />
-                <blockquote className="mt-3 text-[1.05rem] leading-relaxed">« {r.comment} »</blockquote>
+                <Stars value={r.rating} size={15} />
+                <blockquote className="mt-3 leading-relaxed text-ink-soft">« {r.comment} »</blockquote>
                 <figcaption className="mt-5 flex items-center gap-3">
-                  <Avatar user={r.user} size={40} />
+                  <Avatar user={r.user} size={38} />
                   <div>
-                    <p className="text-sm font-extrabold">{r.user.name}</p>
+                    <p className="text-sm font-semibold">{r.user.name}</p>
                     <p className="text-xs text-muted">{r.course.title}</p>
                   </div>
                 </figcaption>
@@ -286,28 +258,26 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* FORMATEURS + CTA */}
+      {/* FORMATEURS + INSCRIPTION */}
       <section className="py-20">
         <Container className="grid gap-6 lg:grid-cols-2">
-          <div className="card relative overflow-hidden p-8 sm:p-10">
-            <div className="absolute -right-6 -top-6 text-[8rem] opacity-15">🧑‍🏫</div>
-            <p className="mb-2 inline-flex items-center gap-1.5 text-sm font-extrabold uppercase tracking-wider text-sky">
+          <div className="card p-8 sm:p-10">
+            <p className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-ink">
               <BadgeCheck className="h-4 w-4" /> Formateurs certifiés
             </p>
-            <h3 className="text-3xl font-extrabold">Tu as un savoir à partager ?</h3>
+            <h3 className="text-2xl font-bold sm:text-3xl">Vous avez une expertise à transmettre ?</h3>
             <p className="mt-3 max-w-md text-muted">
-              Rejoins nos formateurs, crée tes cours avec notre studio et touche des milliers d'apprenants. Chaque profil est vérifié par notre équipe.
+              Rejoignez nos formateurs, créez vos formations avec notre studio et touchez des milliers d'apprenants. Chaque profil est vérifié par notre équipe.
             </p>
             <Link href="/become-instructor" className={buttonClass("secondary", "md", "mt-6")}>
               Devenir formateur
             </Link>
           </div>
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-night p-8 text-white sm:p-10 dark:bg-brand-soft">
-            <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-gradient-to-br from-[#ffc23d] to-[#ff9f1c] opacity-80 blur-sm" />
-            <Repeat className="relative h-10 w-10 text-sun" />
-            <h3 className="relative mt-4 text-3xl font-extrabold">15 minutes par jour suffisent.</h3>
-            <p className="relative mt-3 max-w-md text-white/70">Fixe ton objectif, lance ta première leçon et regarde ta série grandir.</p>
-            <Link href="/register" className={buttonClass("sun", "lg", "relative mt-6")}>
+          <div className="relative overflow-hidden rounded-[1.75rem] p-8 text-white sm:p-10" style={{ background: "var(--night)" }}>
+            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full opacity-30 blur-3xl" style={{ background: "var(--brand)" }} />
+            <h3 className="relative text-2xl font-bold sm:text-3xl">Quinze minutes par jour suffisent.</h3>
+            <p className="relative mt-3 max-w-md text-white/70">Fixez votre objectif quotidien, suivez votre première leçon et constatez vos progrès dès la première semaine.</p>
+            <Link href="/register" className={buttonClass("primary", "lg", "relative mt-6")}>
               Créer mon compte gratuit
             </Link>
           </div>

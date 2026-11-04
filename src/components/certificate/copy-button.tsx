@@ -11,7 +11,7 @@ export function CopyButton({ text, label = "Copier le lien" }: { text: string; l
       size="lg"
       onClick={async () => {
         await navigator.clipboard.writeText(text);
-        toast.success("Lien copié 📋");
+        toast.success("Lien copié");
       }}
     >
       <Link2 className="h-5 w-5" /> {label}

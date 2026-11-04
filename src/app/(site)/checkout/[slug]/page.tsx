@@ -24,7 +24,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ slug:
   return (
     <Container className="py-10 sm:py-14">
       <CheckoutForm
-        course={{ id: course.id, slug: course.slug, title: course.title, emoji: course.emoji, color: course.color, coverUrl: course.coverUrl, price: course.price, instructor: course.instructor.name, chapters: course._count.chapters, durationMinutes: course.durationMinutes, certified: course.certified }}
+        course={{ id: course.id, slug: course.slug, title: course.title, color: course.color, coverUrl: course.coverUrl, price: course.price, instructor: course.instructor.name, chapters: course._count.chapters, durationMinutes: course.durationMinutes, certified: course.certified }}
         initialCurrency={currency}
         user={{ name: user.name, email: user.email }}
       />

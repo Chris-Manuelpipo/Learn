@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GraduationCap, Lock } from "lucide-react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -20,10 +21,10 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
   if (ctx.certificate) {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <p className="text-7xl">🎓</p>
-        <h1 className="mt-4 text-4xl font-extrabold">Tu es certifié·e !</h1>
-        <p className="mt-3 text-muted">Tu as réussi l'examen final avec {ctx.certificate.score} %. Ton certificat est prêt à être partagé.</p>
-        <Link href={`/certificates/${ctx.certificate.code}`} className={buttonClass("sun", "lg", "mt-8")}>
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand-soft text-brand-ink"><GraduationCap className="h-8 w-8" /></span>
+        <h1 className="mt-5 text-3xl font-bold">Vous êtes certifié</h1>
+        <p className="mt-3 text-muted">Vous avez réussi l'examen final avec {ctx.certificate.score} %. Votre certificat est prêt à être partagé.</p>
+        <Link href={`/certificates/${ctx.certificate.code}`} className={buttonClass("primary", "lg", "mt-8")}>
           Voir mon certificat
         </Link>
       </div>
@@ -34,11 +35,11 @@ export default async function ExamPage({ params }: { params: Promise<{ slug: str
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
         <ProgressRing value={progress} size={150} stroke={14}>
-          <span className="text-5xl">🔒</span>
+          <Lock className="h-10 w-10 text-muted" />
         </ProgressRing>
-        <h1 className="mt-6 text-3xl font-extrabold">L'examen final t'attend</h1>
+        <h1 className="mt-6 text-2xl font-bold">Examen final</h1>
         <p className="mt-3 text-muted">
-          Termine toutes les leçons pour le débloquer. Tu en es à <span className="font-extrabold text-brand">{progress} %</span> ({done}/{ctx.flat.length} leçons). Encore un petit effort !
+          Terminez toutes les leçons pour le débloquer. Votre progression : <span className="font-semibold text-ink">{progress} %</span> ({done} leçons sur {ctx.flat.length}).
         </p>
         {nextLesson && (
           <Link href={`/learn/${slug}/${nextLesson.id}`} className={buttonClass("primary", "lg", "mt-8")}>

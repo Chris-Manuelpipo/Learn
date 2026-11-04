@@ -3,23 +3,25 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { CreditCard, Lock, ShieldCheck, Smartphone } from "lucide-react";
+import { Check, Lock, ShieldCheck, Smartphone } from "lucide-react";
 import { processPayment } from "@/app/actions/checkout";
-import { useCelebrate, fireConfetti } from "@/components/gamification/celebration";
+import { useCelebrate } from "@/components/gamification/celebration";
+import { BrandMark } from "@/components/ui/brand-logo";
+import { LOGOS } from "@/lib/brand-logos";
 import { CourseCover } from "@/components/course/course-cover";
 import { Button, buttonClass } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { CURRENCIES, formatPrice, type Currency } from "@/lib/currency";
 import { cn, formatDuration } from "@/lib/utils";
 
-type Course = { id: string; slug: string; title: string; emoji: string; color: string; coverUrl: string | null; price: number; instructor: string; chapters: number; durationMinutes: number; certified: boolean };
+type Course = { id: string; slug: string; title: string; color: string; coverUrl: string | null; price: number; instructor: string; chapters: number; durationMinutes: number; certified: boolean };
 type Method = "CARD" | "ORANGE_MONEY" | "MTN_MOMO" | "PAYPAL";
 
 const METHODS: { id: Method; label: string; sub: string; badge: React.ReactNode }[] = [
-  { id: "MTN_MOMO", label: "MTN MoMo", sub: "Mobile Money", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ffcc00] text-xs font-black text-[#003c71]">MoMo</span> },
-  { id: "ORANGE_MONEY", label: "Orange Money", sub: "Mobile Money", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ff7900] text-lg font-black text-white">OM</span> },
-  { id: "CARD", label: "Carte bancaire", sub: "Visa, Mastercard", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-night to-night-2 text-white"><CreditCard className="h-5 w-5" /></span> },
-  { id: "PAYPAL", label: "PayPal", sub: "Compte PayPal", badge: <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#003087] text-lg font-black italic text-white">P</span> },
+  { id: "MTN_MOMO", label: "MTN MoMo", sub: "Mobile Money", badge: <span className="grid h-10 w-14 place-items-center rounded-xl bg-[#ffcc00] text-[11px] font-bold text-[#003c71]">MoMo</span> },
+  { id: "ORANGE_MONEY", label: "Orange Money", sub: "Mobile Money", badge: <span className="grid h-10 w-14 place-items-center rounded-xl bg-[#ff7900] text-sm font-bold text-white">Orange</span> },
+  { id: "CARD", label: "Carte bancaire", sub: "Visa, Mastercard", badge: <span className="flex h-10 w-14 items-center justify-center gap-0.5 rounded-xl border border-line bg-white"><BrandMark logo={LOGOS.visa} size={22} /><BrandMark logo={LOGOS.mastercard} size={16} /></span> },
+  { id: "PAYPAL", label: "PayPal", sub: "Compte PayPal", badge: <span className="grid h-10 w-14 place-items-center rounded-xl border border-line bg-white"><BrandMark logo={LOGOS.paypal} size={20} /></span> },
 ];
 
 export function CheckoutForm({ course, initialCurrency, user }: { course: Course; initialCurrency: Currency; user: { name: string; email: string } }) {
@@ -51,8 +53,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
       }
       setReference(res.reference!);
       setStage("success");
-      fireConfetti(true);
-      setTimeout(() => celebrate(res.reward), 1200);
+      celebrate(res.reward);
     });
   };
 
@@ -65,12 +66,12 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
   if (stage === "success") {
     return (
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="card mx-auto max-w-lg p-8 text-center sm:p-10">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }} className="mx-auto grid h-24 w-24 place-items-center rounded-full bg-mint text-5xl text-white shadow-[0_6px_0_#0ea47b]">
-          ✓
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.1, duration: 0.25 }} className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand text-on-brand">
+          <Check className="h-8 w-8" strokeWidth={3} />
         </motion.div>
-        <h1 className="mt-6 text-3xl font-extrabold">Paiement réussi !</h1>
+        <h1 className="mt-6 text-2xl font-bold">Paiement confirmé</h1>
         <p className="mt-2 text-muted">
-          Tu as maintenant accès à <span className="font-bold text-ink">{course.title}</span>. Un reçu est disponible dans ton profil.
+          Vous avez désormais accès à <span className="font-semibold text-ink">{course.title}</span>. Le reçu est disponible dans vos paramètres.
         </p>
         <div className="mt-6 rounded-2xl bg-surface-2 p-4 text-left text-sm">
           <Row k="Référence" v={<span className="font-mono">{reference}</span>} />
@@ -78,7 +79,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
           <Row k="Moyen" v={METHODS.find((m) => m.id === method)!.label} />
         </div>
         <Link href={`/learn/${course.slug}`} className={buttonClass("primary", "lg", "mt-8 w-full")}>
-          Commencer le cours 🚀
+          Commencer la formation
         </Link>
       </motion.div>
     );
@@ -87,12 +88,12 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
       <div className="min-w-0">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">Finaliser l'achat</h1>
+        <h1 className="text-3xl font-bold">Finaliser l'achat</h1>
         <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-muted">
-          <Lock className="h-4 w-4" /> Paiement simulé pour la démo : aucun débit réel.
+          <Lock className="h-4 w-4" /> Paiement simulé pour la démonstration : aucun débit réel.
         </p>
 
-        <p className="mb-3 mt-8 text-sm font-extrabold uppercase tracking-wider text-muted">Moyen de paiement</p>
+        <p className="mb-3 mt-8 text-sm font-semibold text-ink">Moyen de paiement</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {METHODS.map((m) => (
             <button
@@ -101,14 +102,14 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
                 setMethod(m.id);
                 setError(null);
               }}
-              className={cn("flex items-center gap-3 rounded-2xl border-2 p-3.5 text-left transition", method === m.id ? "border-brand bg-brand-soft shadow-[0_4px_0_var(--brand)]" : "border-line bg-surface hover:border-line-strong")}
+              className={cn("flex items-center gap-3 rounded-xl border p-3.5 text-left transition", method === m.id ? "border-brand bg-brand-soft ring-1 ring-brand" : "border-line bg-surface hover:border-line-strong")}
             >
               {m.badge}
               <span className="flex-1">
-                <span className="block font-extrabold">{m.label}</span>
+                <span className="block font-bold">{m.label}</span>
                 <span className="text-xs font-semibold text-muted">{m.sub}</span>
               </span>
-              <span className={cn("h-5 w-5 rounded-full border-2", method === m.id ? "border-[6px] border-brand" : "border-line-strong")} />
+              <span className={cn("h-5 w-5 rounded-full border", method === m.id ? "border-[6px] border-brand" : "border-line-strong")} />
             </button>
           ))}
         </div>
@@ -140,7 +141,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
                         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
                         <div className="flex items-center justify-between">
                           <span className="h-8 w-11 rounded-md bg-gradient-to-br from-[#ffd76a] to-[#d9a520]" />
-                          <span className="font-display text-lg font-extrabold italic">learn</span>
+                          <span className="text-lg font-bold italic">learn</span>
                         </div>
                         <p className="font-mono text-lg tracking-widest">{card.number || "•••• •••• •••• ••••"}</p>
                         <div className="flex justify-between text-xs">
@@ -161,9 +162,9 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
                   <Field label={`Numéro ${method === "MTN_MOMO" ? "MTN" : "Orange"}`} hint="9 chiffres commençant par 6, ex. 6 77 12 34 56">
                     <Input icon={<Smartphone className="h-5 w-5" />} inputMode="tel" placeholder="6XX XX XX XX" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^\d ]/g, "").slice(0, 12))} />
                   </Field>
-                  <div className="flex gap-3 rounded-2xl bg-sun/15 p-4 text-sm font-medium text-ink-soft">
-                    <span className="text-xl">📲</span>
-                    <p>En situation réelle, tu recevrais une demande de confirmation sur ton téléphone à valider avec ton code PIN. Ici, la validation est simulée.</p>
+                  <div className="flex gap-3 rounded-xl bg-surface-2 p-4 text-sm text-ink-soft">
+                    <Smartphone className="h-5 w-5 shrink-0 text-ink-soft" />
+                    <p>En situation réelle, vous recevriez une demande de confirmation sur votre téléphone, à valider avec votre code PIN. Ici, la validation est simulée.</p>
                   </div>
                 </div>
               )}
@@ -180,7 +181,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
             {stage === "processing" ? "Traitement en cours…" : `Payer ${price}`}
           </Button>
           <p className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-muted">
-            <ShieldCheck className="h-4 w-4 text-mint" /> Garantie satisfait ou remboursé 14 jours
+            <ShieldCheck className="h-4 w-4 text-brand" /> Garantie satisfait ou remboursé 14 jours
           </p>
         </div>
       </div>
@@ -189,16 +190,16 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
         <div className="card overflow-hidden p-2.5">
           <CourseCover course={course} className="aspect-video rounded-[1.25rem]" />
           <div className="p-4">
-            <p className="font-display text-lg font-extrabold leading-snug">{course.title}</p>
+            <p className="text-lg font-bold leading-snug">{course.title}</p>
             <p className="text-sm text-muted">par {course.instructor}</p>
             <p className="mt-2 text-xs font-bold text-muted">
-              {course.chapters} chapitres · {formatDuration(course.durationMinutes)} {course.certified && "· 🎓 certifiant"}
+              {course.chapters} chapitres · {formatDuration(course.durationMinutes)} {course.certified && "· certifiante"}
             </p>
             <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
               <span className="text-sm font-bold text-muted">Devise</span>
               <div className="flex rounded-xl bg-surface-2 p-1">
                 {(Object.keys(CURRENCIES) as Currency[]).map((c) => (
-                  <button key={c} onClick={() => setCurrency(c)} className={cn("rounded-lg px-3 py-1.5 text-xs font-extrabold transition", currency === c ? "bg-surface text-brand shadow-sm" : "text-muted")}>
+                  <button key={c} onClick={() => setCurrency(c)} className={cn("rounded-lg px-3 py-1.5 text-xs font-bold transition", currency === c ? "bg-surface text-ink shadow-sm" : "text-muted")}>
                     {CURRENCIES[c].label}
                   </button>
                 ))}
@@ -208,8 +209,8 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
               <Row k="Prix du cours" v={price} />
               <Row k="Frais" v="0" />
               <div className="flex items-center justify-between border-t border-dashed border-line pt-3">
-                <span className="font-extrabold">Total</span>
-                <span className="font-display text-2xl font-extrabold text-brand">{price}</span>
+                <span className="font-bold">Total</span>
+                <span className="text-2xl font-bold tracking-tight">{price}</span>
               </div>
             </div>
           </div>

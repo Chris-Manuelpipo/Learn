@@ -156,7 +156,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, { src: string; resumeAt?: nu
             </span>
             <button
               onClick={() => setSpeed(SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length])}
-              className="ml-auto rounded-lg bg-white/15 px-2.5 py-1 text-xs font-extrabold transition hover:bg-white/25"
+              className="ml-auto rounded-lg bg-white/15 px-2.5 py-1 text-xs font-bold transition hover:bg-white/25"
               aria-label="Vitesse de lecture"
             >
               {speed}×

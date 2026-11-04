@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import { Award, Flame, Trophy } from "lucide-react";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { levelInfo } from "@/lib/gamification";
-import { palette } from "@/lib/colors";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { Container, PageHeader } from "@/components/ui/section";
 import { ProgressBar } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { BadgeMedal } from "@/components/ui/badge-medal";
 
-export const metadata: Metadata = { title: "Badges & succès" };
+export const metadata: Metadata = { title: "Badges et progression" };
 
 export default async function BadgesPage() {
   const user = await requireUser("/badges");
@@ -18,28 +18,32 @@ export default async function BadgesPage() {
 
   return (
     <Container className="py-10">
-      <PageHeader emoji="🏅" title="Badges & succès" text={`${earned.size} badge${earned.size > 1 ? "s" : ""} débloqué${earned.size > 1 ? "s" : ""} sur ${badges.length}. Chaque badge rapporte de l'XP bonus !`} />
+      <PageHeader icon={Award} title="Badges et progression" text={`${earned.size} badge${earned.size > 1 ? "s" : ""} obtenu${earned.size > 1 ? "s" : ""} sur ${badges.length}. Chaque badge rapporte de l'XP supplémentaire.`} />
 
       <div className="mb-10 grid gap-4 md:grid-cols-3">
-        <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-grad-a to-grad-b p-6 text-white md:col-span-2">
-          <div className="absolute -right-6 -top-10 font-display text-[10rem] font-extrabold opacity-10">{level.level}</div>
-          <p className="text-sm font-extrabold uppercase tracking-wider text-white/70">Niveau {level.level}</p>
-          <p className="font-display text-4xl font-extrabold">{level.title}</p>
-          <ProgressBar value={level.percent} className="mt-5" height={14} color="linear-gradient(90deg,#ffc93d,#ff9f1c)" track="rgba(255,255,255,.2)" />
-          <p className="mt-2 text-sm font-bold text-white/80">
+        <div className="card p-6 md:col-span-2">
+          <div className="flex items-baseline justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted">Niveau {level.level}</p>
+              <p className="text-2xl font-bold">{level.title}</p>
+            </div>
+            <p className="text-sm text-muted">{formatNumber(user.xp)} XP au total</p>
+          </div>
+          <ProgressBar value={level.percent} className="mt-5" height={10} />
+          <p className="mt-2 text-sm text-muted">
             {formatNumber(level.current)} / {formatNumber(level.needed)} XP · niveau {level.level + 1} à {formatNumber(level.nextAt)} XP
           </p>
         </div>
-        <div className="card grid grid-cols-2 gap-3 p-5">
-          <div className="rounded-2xl bg-coral/12 p-4 text-center">
-            <p className="text-3xl">🔥</p>
-            <p className="font-display text-2xl font-extrabold">{user.streak}</p>
-            <p className="text-xs font-bold text-muted">série actuelle</p>
+        <div className="card grid grid-cols-2 divide-x divide-line p-0">
+          <div className="p-5">
+            <Flame className="h-5 w-5 text-coral" />
+            <p className="mt-3 text-3xl font-bold tracking-tight">{user.streak}</p>
+            <p className="text-sm text-muted">jours de série</p>
           </div>
-          <div className="rounded-2xl bg-sun/15 p-4 text-center">
-            <p className="text-3xl">🏆</p>
-            <p className="font-display text-2xl font-extrabold">{user.bestStreak}</p>
-            <p className="text-xs font-bold text-muted">meilleure série</p>
+          <div className="p-5">
+            <Trophy className="h-5 w-5 text-brand" />
+            <p className="mt-3 text-3xl font-bold tracking-tight">{user.bestStreak}</p>
+            <p className="text-sm text-muted">meilleure série</p>
           </div>
         </div>
       </div>
@@ -47,20 +51,13 @@ export default async function BadgesPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {badges.map((b) => {
           const at = earned.get(b.id);
-          const p = palette(b.color);
           return (
-            <div key={b.id} className={cn("card relative flex flex-col items-center p-6 text-center transition", at ? "hover:-translate-y-1" : "opacity-75")}>
-              <div
-                className={cn("relative grid h-24 w-24 place-items-center rounded-full text-5xl", !at && "grayscale")}
-                style={{ background: at ? `linear-gradient(135deg, ${p.from}, ${p.to})` : "var(--surface-2)", boxShadow: at ? `0 6px 0 ${p.ink}` : "none" }}
-              >
-                <span className={cn(!at && "opacity-40")}>{b.emoji}</span>
-                {!at && <span className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full bg-surface text-base shadow ring-2 ring-line">🔒</span>}
-              </div>
-              <p className="mt-5 font-display text-lg font-extrabold">{b.name}</p>
+            <div key={b.id} className="card flex flex-col items-center p-6 text-center">
+              <BadgeMedal icon={b.icon} color={b.color} earned={!!at} size={72} />
+              <p className="mt-4 font-bold">{b.name}</p>
               <p className="mt-1 text-sm text-muted">{b.description}</p>
-              <p className="mt-auto pt-4 text-xs font-extrabold">
-                {at ? <span className="text-mint">✓ Obtenu le {formatDate(at, { day: "numeric", month: "short" })}</span> : <span className="text-[#b57d00] dark:text-sun">⚡ +{b.xpReward} XP</span>}
+              <p className="mt-auto pt-4 text-xs font-medium">
+                {at ? <span className="text-brand-ink">Obtenu le {formatDate(at, { day: "numeric", month: "short" })}</span> : <span className="text-muted">+{b.xpReward} XP</span>}
               </p>
             </div>
           );

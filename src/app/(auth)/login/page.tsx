@@ -8,14 +8,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { next } = await searchParams;
   return (
     <>
-      <p className="text-5xl">👋</p>
-      <h1 className="mt-4 text-4xl font-extrabold">Content de te revoir !</h1>
-      <p className="mt-2 text-muted">Ta série t'attend. Connecte-toi pour reprendre là où tu t'étais arrêté.</p>
+      <h1 className="text-3xl font-bold">Connexion</h1>
+      <p className="mt-2 text-muted">Heureux de vous revoir. Connectez-vous pour reprendre votre formation.</p>
       <LoginForm next={next} />
       <p className="mt-8 text-center text-sm font-semibold text-muted">
         Pas encore de compte ?{" "}
-        <Link href={`/register${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-extrabold text-brand hover:underline">
-          Inscris-toi gratuitement
+        <Link href={`/register${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-semibold text-brand hover:underline">
+          Créer un compte gratuit
         </Link>
       </p>
     </>

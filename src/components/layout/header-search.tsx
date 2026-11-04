@@ -19,8 +19,8 @@ export function HeaderSearch() {
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Que veux-tu apprendre ?"
-        className="h-10 w-64 rounded-xl border-2 border-line bg-surface pl-10 pr-3 text-sm font-medium outline-none transition placeholder:text-muted focus:w-72 focus:border-brand"
+        placeholder="Rechercher une formation"
+        className="h-10 w-64 rounded-xl border border-line bg-surface pl-10 pr-3 text-sm font-medium outline-none transition placeholder:text-muted focus:w-72 focus:border-brand"
       />
     </form>
   );

@@ -20,7 +20,7 @@ export function FavoriteButton({ courseId, initial, className }: { courseId: str
           setFav(!fav);
           const res = await toggleFavorite(courseId);
           if (res?.error) toast.error(res.error);
-          else toast(res.favorite ? "Ajouté à tes favoris 💜" : "Retiré des favoris");
+          else toast(res.favorite ? "Ajoutée à vos favoris" : "Retirée de vos favoris");
         });
       }}
       className={cn(

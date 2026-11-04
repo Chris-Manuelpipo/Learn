@@ -23,7 +23,7 @@ export function QuizEditor({ courseId, target, initial, passingScore: initialSco
     <div className="space-y-4">
       <div className="card flex flex-wrap items-center justify-between gap-4 p-5">
         <div>
-          <p className="text-lg font-extrabold">{title}</p>
+          <p className="text-lg font-bold">{title}</p>
           <p className="text-sm text-muted">{questions.length} question{questions.length > 1 ? "s" : ""}</p>
         </div>
         <label className="flex items-center gap-3 text-sm font-bold">
@@ -34,7 +34,7 @@ export function QuizEditor({ courseId, target, initial, passingScore: initialSco
       {questions.map((q, i) => (
         <div key={i} className="card space-y-3 p-5">
           <div className="flex items-start gap-3">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-pink/15 font-extrabold text-pink">{i + 1}</span>
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-pink/15 font-bold text-pink">{i + 1}</span>
             <Input value={q.text} onChange={(e) => update(i, { text: e.target.value })} placeholder="Intitulé de la question" />
             <button type="button" onClick={() => setQuestions((qs) => qs.filter((_, k) => k !== i))} className="grid h-12 w-10 shrink-0 place-items-center text-muted hover:text-coral" aria-label="Supprimer la question">
               <Trash2 className="h-4 w-4" />
@@ -46,7 +46,7 @@ export function QuizEditor({ courseId, target, initial, passingScore: initialSco
                 <button
                   type="button"
                   onClick={() => update(i, { options: q.options.map((x, k) => (k === j ? { ...x, isCorrect: !x.isCorrect } : x)) })}
-                  className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl border-2 transition", o.isCorrect ? "border-mint bg-mint text-white" : "border-line-strong text-transparent hover:border-mint")}
+                  className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-lg border transition", o.isCorrect ? "border-brand bg-brand text-on-brand" : "border-line-strong text-transparent hover:border-brand")}
                   aria-label={o.isCorrect ? "Bonne réponse" : "Marquer comme bonne réponse"}
                 >
                   <Check className="h-4 w-4" strokeWidth={3} />
@@ -81,7 +81,7 @@ export function QuizEditor({ courseId, target, initial, passingScore: initialSco
               try {
                 const res = await saveQuiz(courseId, target, questions, score);
                 if (res.error) return void toast.error(res.error);
-                toast.success("Quiz enregistré ✅");
+                toast.success("Quiz enregistré");
                 router.refresh();
                 onSaved?.();
               } catch (e) {

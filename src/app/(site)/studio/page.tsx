@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Star, Users, Wallet, BookOpen, BadgeCheck } from "lucide-react";
+import { BadgeCheck, BookOpen, Clapperboard, GraduationCap, Plus, Star, Users, Wallet } from "lucide-react";
 import { db } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { formatPrice } from "@/lib/currency";
@@ -17,8 +17,8 @@ export const metadata: Metadata = { title: "Studio formateur" };
 const STATUS = {
   DRAFT: ["Brouillon", "bg-surface-2 text-muted"],
   PENDING: ["En validation", "bg-sun/20 text-[#9a6200] dark:text-sun"],
-  PUBLISHED: ["Publié", "bg-mint/15 text-[#0b8a6a] dark:text-mint"],
-  ARCHIVED: ["Archivé", "bg-coral/10 text-coral"],
+  PUBLISHED: ["Publiée", "bg-brand-soft text-brand-ink"],
+  ARCHIVED: ["Archivée", "bg-coral/10 text-coral"],
 } as const;
 
 export default async function StudioPage() {
@@ -38,38 +38,38 @@ export default async function StudioPage() {
     <Container className="py-10">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-brand">Studio formateur</p>
-          <h1 className="mt-1 flex items-center gap-2 text-3xl font-extrabold sm:text-4xl">
-            Bonjour {user.name.split(" ")[0]} {user.instructorVerified && <BadgeCheck className="h-7 w-7 text-sky" />}
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Studio formateur</p>
+          <h1 className="mt-1 flex items-center gap-2 text-3xl font-bold sm:text-4xl">
+            Bonjour {user.name.split(" ")[0]} {user.instructorVerified && <BadgeCheck className="h-7 w-7 text-brand" />}
           </h1>
-          <p className="mt-1 text-muted">{user.instructorVerified ? "Formateur certifié : tes cours sont publiés directement." : "Tes cours sont validés par l'équipe avant publication."}</p>
+          <p className="mt-1 text-muted">{user.instructorVerified ? "Formateur certifié : vos formations sont publiées directement." : "Vos formations sont validées par l'équipe avant publication."}</p>
         </div>
         <Link href="/studio/courses/new" className={buttonClass("primary", "lg")}>
-          <Plus className="h-5 w-5" /> Nouveau cours
+          <Plus className="h-5 w-5" /> Nouvelle formation
         </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { icon: BookOpen, label: "Cours publiés", value: `${courses.filter((c) => c.status === "PUBLISHED").length}/${courses.length}`, color: "text-brand bg-brand-soft" },
+          { icon: BookOpen, label: "Formations publiées", value: `${courses.filter((c) => c.status === "PUBLISHED").length}/${courses.length}`, color: "text-brand bg-brand-soft" },
           { icon: Users, label: "Apprenants", value: formatNumber(students), sub: `+${monthEnrollments} ces 30 derniers jours`, color: "text-sky bg-sky/15" },
-          { icon: Wallet, label: "Revenus", value: formatPrice(revenue._sum.amountXaf ?? 0, "XAF").replace("Gratuit", "0 FCFA"), color: "text-mint bg-mint/15" },
+          { icon: Wallet, label: "Revenus", value: formatPrice(revenue._sum.amountXaf ?? 0, "XAF").replace("Gratuit", "0 FCFA"), color: "text-brand-ink bg-brand-soft" },
           { icon: Star, label: "Note moyenne", value: avg ? avg.toFixed(1) : "—", color: "text-[#c98a00] bg-sun/20" },
         ].map((s) => (
           <div key={s.label} className="card p-5">
             <span className={cn("grid h-11 w-11 place-items-center rounded-2xl", s.color)}>
               <s.icon className="h-5 w-5" />
             </span>
-            <p className="mt-4 font-display text-3xl font-extrabold">{s.value}</p>
+            <p className="mt-4 text-3xl font-bold">{s.value}</p>
             <p className="text-sm font-bold text-muted">{s.label}</p>
-            {s.sub && <p className="mt-1 text-xs font-bold text-mint">{s.sub}</p>}
+            {s.sub && <p className="mt-1 text-xs font-bold text-brand-ink">{s.sub}</p>}
           </div>
         ))}
       </div>
 
       <div className="mt-10 grid gap-8 xl:grid-cols-[1fr_380px]">
         <section>
-          <h2 className="mb-4 text-2xl font-extrabold">Mes cours</h2>
+          <h2 className="mb-4 text-2xl font-bold">Mes formations</h2>
           {courses.length ? (
             <div className="space-y-3">
               {courses.map((c) => (
@@ -77,27 +77,27 @@ export default async function StudioPage() {
                   <CourseCover course={c} size="sm" className="h-16 w-24 shrink-0 rounded-2xl sm:h-20 sm:w-32" />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-extrabold", STATUS[c.status][1])}>{STATUS[c.status][0]}</span>
-                      {c.certified && <span className="text-xs font-bold text-muted">🎓 certifiant</span>}
+                      <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-bold", STATUS[c.status][1])}>{STATUS[c.status][0]}</span>
+                      {c.certified && <span className="inline-flex items-center gap-1 text-xs text-muted"><GraduationCap className="h-3.5 w-3.5" /> certifiante</span>}
                     </div>
-                    <p className="mt-1 truncate font-extrabold">{c.title}</p>
+                    <p className="mt-1 truncate font-bold">{c.title}</p>
                     <p className="text-xs font-semibold text-muted">
                       {c._count.chapters} chapitres · {formatDuration(c.durationMinutes)} · {formatPrice(c.price, "XAF")}
                     </p>
                   </div>
                   <div className="hidden text-right text-sm sm:block">
-                    <p className="font-extrabold">{formatNumber(c.studentsCount)} 👥</p>
+                    <p className="flex items-center justify-end gap-1 font-semibold"><Users className="h-4 w-4 text-muted" /> {formatNumber(c.studentsCount)}</p>
                     <p className="font-bold text-muted">{c.ratingCount ? `${c.ratingAvg.toFixed(1)} ★` : "—"}</p>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <EmptyState emoji="🎬" title="Crée ton premier cours" text="Commence par un titre : tu pourras tout modifier ensuite." action={<Link href="/studio/courses/new" className={buttonClass("primary", "lg")}>Nouveau cours</Link>} />
+            <EmptyState icon={Clapperboard} title="Créez votre première formation" text="Commencez par un titre : tout reste modifiable ensuite." action={<Link href="/studio/courses/new" className={buttonClass("primary", "lg")}>Nouvelle formation</Link>} />
           )}
         </section>
         <section>
-          <h2 className="mb-4 text-2xl font-extrabold">Derniers avis</h2>
+          <h2 className="mb-4 text-2xl font-bold">Derniers avis</h2>
           <div className="card divide-y divide-line">
             {reviews.length === 0 && <p className="p-5 text-sm text-muted">Pas encore d'avis.</p>}
             {reviews.map((r) => (

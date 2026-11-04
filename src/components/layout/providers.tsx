@@ -15,7 +15,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="bottom-center"
         toastOptions={{
           classNames: {
-            toast: "!rounded-2xl !border-2 !border-line !bg-surface !text-ink !font-sans !font-semibold !shadow-[var(--shadow-pop)]",
+            toast: "!rounded-2xl !border !border-line !bg-surface !text-ink !font-sans !font-semibold !shadow-[var(--shadow-pop)]",
             description: "!text-muted",
           },
         }}

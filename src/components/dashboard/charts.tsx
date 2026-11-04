@@ -88,7 +88,7 @@ export function WeekBars({ days }: { days: Day[] }) {
         const isToday = i === days.length - 1;
         return (
           <div key={d.date} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
-            <span className="text-[11px] font-extrabold text-muted">{d.xp > 0 ? d.xp : ""}</span>
+            <span className="text-[11px] font-bold text-muted">{d.xp > 0 ? d.xp : ""}</span>
             <motion.div
               initial={{ height: 0 }}
               animate={{ height: `${Math.max(4, (d.xp / max) * 100)}%` }}
@@ -96,7 +96,7 @@ export function WeekBars({ days }: { days: Day[] }) {
               className="w-full max-w-12 rounded-t-xl rounded-b-md"
               style={{ background: d.xp === 0 ? "var(--line)" : isToday ? "linear-gradient(180deg,var(--grad-b),var(--grad-a))" : "linear-gradient(180deg,color-mix(in srgb,var(--brand) 55%,white),var(--brand))" }}
             />
-            <span className={`text-xs font-extrabold capitalize ${isToday ? "text-brand" : "text-muted"}`}>
+            <span className={`text-xs font-bold capitalize ${isToday ? "text-brand" : "text-muted"}`}>
               {isToday ? "Auj." : formatDate(date, { weekday: "short" }).replace(".", "")}
             </span>
           </div>

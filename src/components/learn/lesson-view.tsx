@@ -46,11 +46,11 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
       if ("error" in res) return void toast.error(res.error);
       setDone(true);
       if (res.courseCompleted) {
-        celebrate(res.reward ? { ...res.reward } : null, { big: true });
-        toast.success(res.certificateCode ? "Cours terminé et certificat obtenu ! 🎓" : hasExam ? "Toutes les leçons terminées ! L'examen final t'attend 🏆" : "Cours terminé ! 🎉");
+        celebrate(res.reward);
+        toast.success(res.certificateCode ? "Formation terminée, votre certificat est disponible" : hasExam ? "Toutes les leçons sont terminées : l'examen final est disponible" : "Formation terminée");
       } else {
         celebrate(res.reward);
-        if (auto) toast("Leçon validée automatiquement ✅", { duration: 1800 });
+        if (auto) toast("Leçon validée", { duration: 1800 });
       }
       router.refresh();
     });
@@ -89,17 +89,17 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
 
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h1 className="flex items-center gap-3 text-2xl font-extrabold sm:text-3xl">
-                {lesson.type === "ARTICLE" ? <FileText className="h-7 w-7 shrink-0 text-sky" /> : <PlayCircle className="h-7 w-7 shrink-0 text-brand" />}
+              <h1 className="flex items-center gap-3 text-2xl font-bold sm:text-3xl">
+                {lesson.type === "ARTICLE" ? <FileText className="h-7 w-7 shrink-0 text-brand" /> : <PlayCircle className="h-7 w-7 shrink-0 text-brand" />}
                 {lesson.title}
               </h1>
             </div>
             {done ? (
-              <span className="inline-flex shrink-0 items-center gap-2 rounded-2xl bg-mint/15 px-4 py-2.5 font-extrabold text-[#0b8a6a] dark:text-mint">
+              <span className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand-soft px-4 py-2.5 font-semibold text-brand-ink">
                 <CheckCircle2 className="h-5 w-5" /> Terminée
               </span>
             ) : (
-              <Button variant="mint" onClick={() => complete()} loading={pending} disabled={readOnly} className="shrink-0">
+              <Button variant="primary" onClick={() => complete()} loading={pending} disabled={readOnly} className="shrink-0">
                 <CheckCircle2 className="h-5 w-5" /> {lesson.type === "ARTICLE" ? "J'ai terminé la lecture" : "Marquer comme terminée"}
               </Button>
             )}
@@ -114,7 +114,7 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
                 <Tabs.Trigger
                   key={v}
                   value={v}
-                  className="-mb-[2px] border-b-[3px] border-transparent px-4 py-3 text-sm font-extrabold text-muted transition hover:text-ink data-[state=active]:border-brand data-[state=active]:text-brand"
+                  className="-mb-[2px] border-b-[3px] border-transparent px-4 py-3 text-sm font-bold text-muted transition hover:text-ink data-[state=active]:border-brand data-[state=active]:text-brand"
                 >
                   {l}
                 </Tabs.Trigger>
@@ -136,7 +136,7 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
             <ArrowLeft className="h-5 w-5 text-muted transition group-hover:-translate-x-1" />
             <span className="min-w-0">
               <span className="block text-xs font-bold text-muted">Précédente</span>
-              <span className="block truncate font-extrabold">{prev.title}</span>
+              <span className="block truncate font-bold">{prev.title}</span>
             </span>
           </Link>
         ) : (
@@ -145,11 +145,11 @@ export function LessonView({ courseSlug, lesson, quiz, done: initialDone, resume
         {nextHref && (
           <Link
             href={nextHref}
-            className={cn("group flex items-center justify-end gap-3 rounded-[1.75rem] p-4 text-right transition hover:-translate-y-0.5", done ? "bg-brand text-on-brand shadow-[0_5px_0_var(--chunk)]" : "card")}
+            className={cn("group flex items-center justify-end gap-3 rounded-[1.75rem] p-4 text-right transition hover:-translate-y-0.5", done ? "bg-brand text-on-brand shadow-sm" : "card")}
           >
             <span className="min-w-0">
               <span className={cn("block text-xs font-bold", done ? "text-white/75" : "text-muted")}>{next ? "Leçon suivante" : "Dernière étape"}</span>
-              <span className="block truncate font-extrabold">{next ? next.title : "🏆 Examen final"}</span>
+              <span className="block truncate font-bold">{next ? next.title : "Examen final"}</span>
             </span>
             <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
           </Link>
@@ -173,7 +173,7 @@ function NotesPanel({ lessonId, initial, player, readOnly }: { lessonId: string;
       if ("note" in res && res.note) {
         setNotes((n) => [...n, res.note!].sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)));
         setText("");
-        toast.success("Note enregistrée 📝");
+        toast.success("Note enregistrée");
         celebrate(res.reward);
       }
     });
@@ -181,10 +181,10 @@ function NotesPanel({ lessonId, initial, player, readOnly }: { lessonId: string;
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
       <div className="card h-fit p-5">
-        <p className="flex items-center gap-2 font-extrabold">
+        <p className="flex items-center gap-2 font-bold">
           <NotebookPen className="h-5 w-5 text-brand" /> Nouvelle note
         </p>
-        <p className="mt-1 text-sm text-muted">{player ? "Elle sera liée au moment actuel de la vidéo." : "Reformule avec tes mots : c'est comme ça qu'on retient."}</p>
+        <p className="mt-1 text-sm text-muted">{player ? "Elle sera liée au moment actuel de la vidéo." : "Reformulez avec vos propres mots : c'est ainsi que l'on retient."}</p>
         <Textarea
           className="mt-3"
           value={text}
@@ -200,13 +200,13 @@ function NotesPanel({ lessonId, initial, player, readOnly }: { lessonId: string;
         </Button>
       </div>
       <div className="space-y-3">
-        {notes.length === 0 && <p className="rounded-3xl border-2 border-dashed border-line p-8 text-center text-sm font-semibold text-muted">Aucune note pour cette leçon. Les meilleures notes tiennent en une phrase ✍️</p>}
+        {notes.length === 0 && <p className="rounded-3xl border border-dashed border-line p-8 text-center text-sm font-semibold text-muted">Aucune note pour cette leçon. Les notes les plus utiles tiennent en une phrase.</p>}
         {notes.map((n) => (
           <div key={n.id} className="group card flex gap-3 p-4">
             {n.timestamp !== null && (
               <button
                 onClick={() => player?.current?.seek(n.timestamp!)}
-                className="h-fit shrink-0 rounded-lg bg-brand-soft px-2 py-1 font-mono text-xs font-extrabold text-brand transition hover:bg-brand hover:text-white"
+                className="h-fit shrink-0 rounded-lg bg-brand-soft px-2 py-1 font-mono text-xs font-bold text-brand transition hover:bg-brand hover:text-on-brand"
                 title="Aller à ce moment"
               >
                 {formatClock(n.timestamp)}

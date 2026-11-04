@@ -17,11 +17,11 @@ export default function VerifyPage() {
   return (
     <Container className="py-20">
       <div className="mx-auto max-w-lg text-center">
-        <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-mint/15 text-mint">
+        <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-brand-soft text-brand-ink">
           <ShieldCheck className="h-10 w-10" />
         </div>
-        <h1 className="mt-6 text-4xl font-extrabold">Vérifier un certificat</h1>
-        <p className="mt-3 text-muted">Saisis l'identifiant inscrit sur le certificat (ou scanne son QR code) pour vérifier son authenticité.</p>
+        <h1 className="mt-6 text-4xl font-bold">Vérifier un certificat</h1>
+        <p className="mt-3 text-muted">Saisissez l'identifiant inscrit sur le certificat, ou scannez son QR code, pour vérifier son authenticité.</p>
         <form action={go} className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Input name="code" placeholder="LRN-XXXX-XXXX-XXXX" className="font-mono uppercase" required />
           <Button size="lg" type="submit">

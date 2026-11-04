@@ -20,7 +20,7 @@ export default async function VerifyCodePage({ params }: { params: Promise<{ cod
           <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-coral/15 text-coral">
             <ShieldX className="h-10 w-10" />
           </div>
-          <h1 className="mt-6 text-3xl font-extrabold">Certificat introuvable</h1>
+          <h1 className="mt-6 text-3xl font-bold">Certificat introuvable</h1>
           <p className="mt-3 text-muted">
             Aucun certificat ne correspond à l'identifiant <span className="font-mono font-bold text-ink">{decodeURIComponent(code)}</span>. Vérifie la saisie.
           </p>
@@ -37,7 +37,7 @@ export default async function VerifyCodePage({ params }: { params: Promise<{ cod
       <div className="card mx-auto max-w-2xl overflow-hidden">
         <div className="bg-gradient-to-br from-[#1fd1a0] to-[#14b8c4] p-8 text-center text-white">
           <ShieldCheck className="mx-auto h-14 w-14" />
-          <h1 className="mt-3 text-3xl font-extrabold">Certificat valide</h1>
+          <h1 className="mt-3 text-3xl font-bold">Certificat valide</h1>
           <p className="mt-1 font-mono text-sm font-bold text-white/85">{cert.code}</p>
         </div>
         <div className="p-8">
@@ -45,7 +45,7 @@ export default async function VerifyCodePage({ params }: { params: Promise<{ cod
             <Avatar user={cert.user} size={64} />
             <div>
               <p className="text-sm font-bold text-muted">Délivré à</p>
-              <Link href={`/u/${cert.user.username}`} className="text-2xl font-extrabold hover:text-brand">
+              <Link href={`/u/${cert.user.username}`} className="text-2xl font-bold hover:text-brand">
                 {cert.user.name}
               </Link>
             </div>
@@ -60,10 +60,10 @@ export default async function VerifyCodePage({ params }: { params: Promise<{ cod
               ["Date de délivrance", formatDate(cert.issuedAt)],
             ].map(([k, v]) => (
               <div key={k} className="rounded-2xl bg-surface-2 p-4">
-                <dt className="text-xs font-extrabold uppercase tracking-wider text-muted">{k}</dt>
-                <dd className="mt-1 flex items-center gap-1.5 font-extrabold">
+                <dt className="text-xs font-bold uppercase tracking-wider text-muted">{k}</dt>
+                <dd className="mt-1 flex items-center gap-1.5 font-bold">
                   {v}
-                  {k === "Formateur" && cert.course.instructor.instructorVerified && <BadgeCheck className="h-4 w-4 text-sky" />}
+                  {k === "Formateur" && cert.course.instructor.instructorVerified && <BadgeCheck className="h-4 w-4 text-brand" />}
                 </dd>
               </div>
             ))}

@@ -42,11 +42,11 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
       {chapters.map((ch, ci) => (
         <div key={ch.id} className="card overflow-hidden">
           <div className="flex items-center gap-3 border-b border-line bg-surface-2/60 p-4">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-soft font-display font-extrabold text-brand">{ci + 1}</span>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-soft font-bold text-brand">{ci + 1}</span>
             <input
               defaultValue={ch.title}
               onBlur={(e) => e.target.value !== ch.title && run(() => renameChapter(ch.id, e.target.value))}
-              className="min-w-0 flex-1 rounded-lg bg-transparent px-2 py-1 font-extrabold outline-none focus:bg-surface focus:ring-2 focus:ring-brand/30"
+              className="min-w-0 flex-1 rounded-lg bg-transparent px-2 py-1 font-bold outline-none focus:bg-surface focus:ring-2 focus:ring-brand/30"
               aria-label="Titre du chapitre"
             />
             <IconBtn label="Monter" disabled={ci === 0} onClick={() => run(() => moveChapter(ch.id, -1))}><ArrowUp className="h-4 w-4" /></IconBtn>
@@ -62,7 +62,7 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-bold">{l.title}</p>
                     <p className="text-xs font-semibold text-muted">
-                      {T.label} · {l.durationMinutes} min {l.isPreview && "· 👀 aperçu gratuit"}
+                      {T.label} · {l.durationMinutes} min {l.isPreview && "· aperçu gratuit"}
                       {l.type === "QUIZ" && ` · ${l.quiz?.questions.length ?? 0} questions`}
                       {l.type === "VIDEO" && !l.videoUrl && <span className="text-coral"> · vidéo manquante</span>}
                     </p>
@@ -78,7 +78,7 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
               );
             })}
           </ul>
-          <button onClick={() => setEditing({ chapterId: ch.id })} className="flex w-full items-center justify-center gap-2 border-t border-dashed border-line py-3 text-sm font-extrabold text-brand transition hover:bg-brand-soft/50">
+          <button onClick={() => setEditing({ chapterId: ch.id })} className="flex w-full items-center justify-center gap-2 border-t border-dashed border-line py-3 text-sm font-bold text-brand transition hover:bg-brand-soft/50">
             <Plus className="h-4 w-4" /> Ajouter une leçon
           </button>
         </div>
@@ -92,7 +92,7 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
             setNewChapter("");
           });
         }}
-        className="flex gap-3 rounded-[1.75rem] border-2 border-dashed border-line-strong p-3"
+        className="flex gap-3 rounded-[1.75rem] border border-dashed border-line-strong p-3"
       >
         <Input value={newChapter} onChange={(e) => setNewChapter(e.target.value)} placeholder="Titre du nouveau chapitre…" />
         <Button type="submit" loading={pending}><Plus className="h-4 w-4" /> Chapitre</Button>
@@ -120,7 +120,7 @@ export function CurriculumEditor({ courseId, chapters }: { courseId: string; cha
           <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm" />
           <Dialog.Content className="fixed inset-x-3 top-[4vh] z-[81] mx-auto max-h-[92vh] max-w-3xl overflow-y-auto rounded-3xl bg-bg p-5 shadow-2xl sm:p-8">
             <div className="mb-4 flex items-center justify-between">
-              <Dialog.Title className="text-2xl font-extrabold">{quizFor?.title}</Dialog.Title>
+              <Dialog.Title className="text-2xl font-bold">{quizFor?.title}</Dialog.Title>
               <Dialog.Close className="grid h-10 w-10 place-items-center rounded-xl hover:bg-surface-2" aria-label="Fermer"><X className="h-5 w-5" /></Dialog.Close>
             </div>
             {quizFor?.quiz && (
@@ -163,13 +163,13 @@ function LessonDialog({ state, onClose, onSave, pending }: { state: { chapterId:
         <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm" />
         <Dialog.Content className="fixed inset-x-3 top-[5vh] z-[81] mx-auto max-h-[90vh] max-w-2xl overflow-y-auto rounded-3xl bg-surface p-6 shadow-2xl sm:p-8">
           <div className="mb-6 flex items-center justify-between">
-            <Dialog.Title className="text-2xl font-extrabold">{l ? "Modifier la leçon" : "Nouvelle leçon"}</Dialog.Title>
+            <Dialog.Title className="text-2xl font-bold">{l ? "Modifier la leçon" : "Nouvelle leçon"}</Dialog.Title>
             <Dialog.Close className="grid h-10 w-10 place-items-center rounded-xl hover:bg-surface-2" aria-label="Fermer"><X className="h-5 w-5" /></Dialog.Close>
           </div>
           <div className="space-y-5">
             <div className="grid grid-cols-3 gap-2">
               {TYPES.map((t) => (
-                <button key={t.v} type="button" onClick={() => setType(t.v)} className={cn("flex flex-col items-center gap-1.5 rounded-2xl border-2 p-3 font-extrabold transition", type === t.v ? "border-brand bg-brand-soft" : "border-line hover:border-line-strong")}>
+                <button key={t.v} type="button" onClick={() => setType(t.v)} className={cn("flex flex-col items-center gap-1.5 rounded-2xl border p-3 font-bold transition", type === t.v ? "border-brand bg-brand-soft" : "border-line hover:border-line-strong")}>
                   <t.icon className={cn("h-6 w-6", t.color)} /> {t.label}
                 </button>
               ))}

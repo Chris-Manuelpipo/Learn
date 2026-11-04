@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flame, Zap } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
 import { db } from "@/lib/db";
@@ -47,20 +48,23 @@ export async function Header() {
             <>
               <Link
                 href="/badges"
-                className="hidden items-center gap-3 rounded-2xl border-2 border-line bg-surface px-3 py-1.5 text-sm font-extrabold transition hover:border-line-strong md:flex"
+                className="hidden items-center gap-3 rounded-2xl border border-line bg-surface px-3 py-1.5 text-sm font-bold transition hover:border-line-strong md:flex"
                 title={`Série de ${user.streak} jours · ${user.xp} XP`}
               >
-                <span className="flex items-center gap-1 text-coral">
-                  <span className={user.streak > 0 ? "" : "grayscale"}>🔥</span>
+                <span className={`flex items-center gap-1 ${user.streak > 0 ? "text-coral" : "text-muted"}`}>
+                  <Flame className="h-4 w-4" />
                   {user.streak}
                 </span>
-                <span className="flex items-center gap-1 text-[#b57d00] dark:text-sun">⚡ {user.xp}</span>
+                <span className="flex items-center gap-1 text-ink-soft">
+                  <Zap className="h-4 w-4 text-brand" />
+                  {user.xp}
+                </span>
               </Link>
               <NotificationsMenu
-                items={notifications.map((n) => ({ id: n.id, title: n.title, body: n.body, emoji: n.emoji, href: n.href, read: n.read, createdAt: n.createdAt.toISOString() }))}
+                items={notifications.map((n) => ({ id: n.id, title: n.title, body: n.body, icon: n.icon, href: n.href, read: n.read, createdAt: n.createdAt.toISOString() }))}
               />
               <UserMenu
-                user={{ name: user.name, email: user.email, username: user.username, role: user.role, avatarEmoji: user.avatarEmoji, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl }}
+                user={{ name: user.name, email: user.email, username: user.username, role: user.role, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl }}
                 level={level}
               />
             </>

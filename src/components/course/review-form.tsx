@@ -9,7 +9,7 @@ import { submitReview } from "@/app/actions/courses";
 import { useCelebrate } from "@/components/gamification/celebration";
 import { cn } from "@/lib/utils";
 
-const LABELS = ["", "Décevant", "Bof", "Correct", "Très bien", "Génial !"];
+const LABELS = ["", "Décevant", "Moyen", "Correct", "Très bien", "Excellent"];
 
 export function ReviewForm({ courseId, initial }: { courseId: string; initial: { rating: number; comment: string } | null }) {
   const [rating, setRating] = useState(initial?.rating ?? 0);
@@ -27,23 +27,23 @@ export function ReviewForm({ courseId, initial }: { courseId: string; initial: {
         start(async () => {
           const res = await submitReview(courseId, rating, comment);
           if (res.error) return void toast.error(res.error);
-          toast.success(initial ? "Avis mis à jour" : "Merci pour ton avis !");
+          toast.success(initial ? "Avis mis à jour" : "Merci pour votre avis");
           celebrate(res.reward);
         });
       }}
     >
-      <p className="font-extrabold">{initial ? "Modifier ton avis" : "Qu'as-tu pensé de ce cours ?"}</p>
+      <p className="font-bold">{initial ? "Modifier votre avis" : "Qu'avez-vous pensé de cette formation ?"}</p>
       <div className="mt-3 flex items-center gap-1" onMouseLeave={() => setHover(0)}>
         {[1, 2, 3, 4, 5].map((n) => (
           <button key={n} type="button" onMouseEnter={() => setHover(n)} onClick={() => setRating(n)} className="transition hover:scale-125" aria-label={`${n} étoiles`}>
             <Star className={cn("h-8 w-8", n <= shown ? "fill-sun text-sun" : "text-line-strong")} strokeWidth={1.5} />
           </button>
         ))}
-        <span className="ml-3 text-sm font-extrabold text-muted">{LABELS[shown]}</span>
+        <span className="ml-3 text-sm font-bold text-muted">{LABELS[shown]}</span>
       </div>
-      <Textarea className="mt-4" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Ce qui t'a plu, ce qui pourrait être amélioré…" maxLength={1000} />
+      <Textarea className="mt-4" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Ce qui vous a plu, ce qui pourrait être amélioré…" maxLength={1000} />
       <div className="mt-4 flex items-center justify-between gap-3">
-        {!initial && <span className="text-xs font-bold text-muted">⚡ +15 XP pour ton premier avis</span>}
+        {!initial && <span className="text-xs text-muted">+15 XP pour votre premier avis</span>}
         <Button type="submit" loading={pending} disabled={!rating} className="ml-auto">
           {initial ? "Mettre à jour" : "Publier mon avis"}
         </Button>

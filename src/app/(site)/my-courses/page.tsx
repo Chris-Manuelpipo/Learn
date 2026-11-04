@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BookOpen, Flag, Heart } from "lucide-react";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
@@ -12,9 +13,9 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Mes cours" };
 
 const TABS = [
-  ["progress", "En cours", "📖"],
-  ["done", "Terminés", "🏁"],
-  ["favorites", "Favoris", "💜"],
+  ["progress", "En cours", BookOpen],
+  ["done", "Terminées", Flag],
+  ["favorites", "Favoris", Heart],
 ] as const;
 
 export default async function MyCoursesPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
@@ -31,15 +32,15 @@ export default async function MyCoursesPage({ searchParams }: { searchParams: Pr
 
   return (
     <Container className="py-10">
-      <PageHeader emoji="📚" title="Mes cours" text="Retrouve tous tes cours et reprends exactement là où tu t'étais arrêté." />
+      <PageHeader icon={BookOpen} title="Mes formations" text="Retrouvez toutes vos formations et reprenez exactement là où vous vous êtes arrêté." />
       <div className="mb-8 flex gap-2 overflow-x-auto">
-        {TABS.map(([k, l, e]) => (
+        {TABS.map(([k, l, TabIcon]) => (
           <Link
             key={k}
             href={`/my-courses?tab=${k}`}
-            className={cn("flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-extrabold transition", tab === k ? "bg-brand text-on-brand shadow-[0_4px_0_var(--chunk)]" : "bg-surface text-ink-soft ring-2 ring-line hover:ring-line-strong")}
+            className={cn("flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition", tab === k ? "bg-brand text-on-brand" : "bg-surface text-ink-soft ring-1 ring-line hover:ring-line-strong")}
           >
-            {e} {l}
+            <TabIcon className="h-4 w-4" /> {l}
             <span className={cn("rounded-full px-2 text-xs", tab === k ? "bg-white/25" : "bg-surface-2")}>{counts[k]}</span>
           </Link>
         ))}
@@ -52,7 +53,7 @@ export default async function MyCoursesPage({ searchParams }: { searchParams: Pr
             ))}
           </div>
         ) : (
-          <EmptyState emoji="💜" title="Aucun favori pour l'instant" text="Clique sur le cœur d'un cours pour le garder sous le coude." action={<Link href="/courses" className={buttonClass("primary", "lg")}>Explorer</Link>} />
+          <EmptyState icon={Heart} title="Aucun favori pour le moment" text="Cliquez sur le cœur d'une formation pour la retrouver ici." action={<Link href="/courses" className={buttonClass("primary", "lg")}>Explorer</Link>} />
         )
       ) : (tab === "done" ? done : inProgress).length ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -62,9 +63,9 @@ export default async function MyCoursesPage({ searchParams }: { searchParams: Pr
         </div>
       ) : (
         <EmptyState
-          emoji={tab === "done" ? "🏁" : "📖"}
+          icon={tab === "done" ? Flag : BookOpen}
           title={tab === "done" ? "Pas encore de cours terminé" : "Aucun cours en cours"}
-          text={tab === "done" ? "Chaque leçon te rapproche de la ligne d'arrivée. Tu vas y arriver !" : "Trouve le cours qui te fait envie et commence aujourd'hui."}
+          text={tab === "done" ? "Chaque leçon vous rapproche de la fin de votre formation." : "Trouvez la formation qui vous intéresse et commencez dès aujourd'hui."}
           action={<Link href="/courses" className={buttonClass("primary", "lg")}>Explorer le catalogue</Link>}
         />
       )}

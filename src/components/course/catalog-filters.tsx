@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Search, SlidersHorizontal, X } from "lucide-react";
+import { IconTile } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 
 function useParamUpdater() {
@@ -39,7 +40,7 @@ export function CatalogSearch({ initial }: { initial: string }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Python, design, anglais, marketing…"
-        className="h-14 w-full rounded-2xl border-2 border-line bg-surface pl-14 pr-32 text-base font-medium shadow-[var(--shadow-soft)] outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
+        className="h-14 w-full rounded-2xl border border-line bg-surface pl-14 pr-32 text-base font-medium shadow-[var(--shadow-soft)] outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
       />
       <button className="absolute right-2 top-2 h-10 rounded-xl bg-brand px-5 text-sm font-bold text-on-brand transition hover:brightness-110 active:scale-95">
         Rechercher
@@ -51,8 +52,8 @@ export function CatalogSearch({ initial }: { initial: string }) {
 const SORTS = [
   ["popular", "Les plus populaires"],
   ["rating", "Les mieux notés"],
-  ["newest", "Les plus récents"],
-  ["short", "Les plus courts"],
+  ["newest", "Les plus récentes"],
+  ["short", "Les plus courtes"],
   ["price-asc", "Prix croissant"],
   ["price-desc", "Prix décroissant"],
 ] as const;
@@ -63,7 +64,7 @@ export function CatalogSort() {
     <select
       value={params.get("sort") ?? "popular"}
       onChange={(e) => update({ sort: e.target.value === "popular" ? null : e.target.value })}
-      className="h-10 cursor-pointer rounded-xl border-2 border-line bg-surface px-3 text-sm font-bold outline-none focus:border-brand"
+      className="h-10 cursor-pointer rounded-xl border border-line bg-surface px-3 text-sm font-bold outline-none focus:border-brand"
       aria-label="Trier"
     >
       {SORTS.map(([v, l]) => (
@@ -75,7 +76,7 @@ export function CatalogSort() {
   );
 }
 
-type Cat = { slug: string; name: string; icon: string; count: number };
+type Cat = { slug: string; name: string; icon: string; color: string; count: number };
 
 export function CatalogFilters({ categories }: { categories: Cat[] }) {
   const { params, update, pending } = useParamUpdater();
@@ -94,7 +95,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       active ? "bg-brand-soft text-brand-ink" : "text-ink-soft hover:bg-surface-2",
     );
   const box = (active: boolean) =>
-    cn("grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 text-[10px] text-on-brand transition", active ? "border-brand bg-brand" : "border-line-strong");
+    cn("grid h-5 w-5 shrink-0 place-items-center rounded-md border text-[10px] text-on-brand transition", active ? "border-brand bg-brand" : "border-line-strong");
 
   const content = (
     <div className={cn("space-y-7 transition-opacity", pending && "opacity-60")}>
@@ -103,7 +104,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
           const active = list("category").includes(c.slug);
           return (
             <button key={c.slug} onClick={() => toggle("category", c.slug)} className={chip(active)}>
-              <span className="text-lg">{c.icon}</span>
+              <IconTile name={c.icon} color={c.color} size={28} />
               <span className="flex-1">{c.name}</span>
               <span className="text-xs text-muted">{c.count}</span>
             </button>
@@ -112,14 +113,14 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       </Group>
       <Group title="Niveau">
         {[
-          ["BEGINNER", "🌱 Débutant"],
-          ["INTERMEDIATE", "🌿 Intermédiaire"],
-          ["ADVANCED", "🌳 Avancé"],
+          ["BEGINNER", "Débutant"],
+          ["INTERMEDIATE", "Intermédiaire"],
+          ["ADVANCED", "Avancé"],
         ].map(([v, l]) => {
           const active = list("level").includes(v);
           return (
             <button key={v} onClick={() => toggle("level", v)} className={chip(active)}>
-              <span className={box(active)}>{active && "✓"}</span>
+              <span className={box(active)}>{active && <Check className="h-3 w-3" strokeWidth={3} />}</span>
               {l}
             </button>
           );
@@ -128,8 +129,8 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       <Group title="Prix">
         {[
           [null, "Tous"],
-          ["free", "🎁 Gratuits"],
-          ["paid", "💳 Payants"],
+          ["free", "Gratuites"],
+          ["paid", "Payantes"],
         ].map(([v, l]) => {
           const active = (params.get("price") ?? null) === v;
           return (
@@ -143,9 +144,9 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       <Group title="Durée">
         {[
           [null, "Toutes"],
-          ["short", "⚡ Moins de 2 h"],
-          ["medium", "⏳ 2 à 4 h"],
-          ["long", "🏔️ Plus de 4 h"],
+          ["short", "Moins de 2 h"],
+          ["medium", "De 2 à 4 h"],
+          ["long", "Plus de 4 h"],
         ].map(([v, l]) => {
           const active = (params.get("duration") ?? null) === v;
           return (
@@ -158,12 +159,12 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
       </Group>
       <Group title="Options">
         <button onClick={() => update({ certified: params.get("certified") ? null : "1" })} className={chip(!!params.get("certified"))}>
-          <span className={box(!!params.get("certified"))}>{params.get("certified") && "✓"}</span>
-          🎓 Avec certificat
+          <span className={box(!!params.get("certified"))}>{params.get("certified") && <Check className="h-3 w-3" strokeWidth={3} />}</span>
+          Avec certificat
         </button>
         <button onClick={() => update({ rating: params.get("rating") ? null : "4.5" })} className={chip(!!params.get("rating"))}>
-          <span className={box(!!params.get("rating"))}>{params.get("rating") && "✓"}</span>
-          ⭐ Note 4,5 et plus
+          <span className={box(!!params.get("rating"))}>{params.get("rating") && <Check className="h-3 w-3" strokeWidth={3} />}</span>
+          Note de 4,5 et plus
         </button>
       </Group>
       {activeCount > 0 && (
@@ -179,7 +180,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
 
   return (
     <>
-      <button onClick={() => setOpen(!open)} className="flex items-center justify-center gap-2 rounded-2xl border-2 border-line bg-surface py-3 font-bold lg:hidden">
+      <button onClick={() => setOpen(!open)} className="flex items-center justify-center gap-2 rounded-2xl border border-line bg-surface py-3 font-bold lg:hidden">
         <SlidersHorizontal className="h-4 w-4" /> Filtres {activeCount > 0 && <span className="rounded-full bg-brand px-2 text-xs text-on-brand">{activeCount}</span>}
       </button>
       <aside className={cn("lg:sticky lg:top-24 lg:block lg:self-start", open ? "block" : "hidden")}>
@@ -192,7 +193,7 @@ export function CatalogFilters({ categories }: { categories: Cat[] }) {
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 px-3 text-xs font-extrabold uppercase tracking-wider text-muted">{title}</p>
+      <p className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-muted">{title}</p>
       <div className="space-y-0.5">{children}</div>
     </div>
   );
@@ -208,7 +209,7 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
   };
   return (
     <nav className="mt-10 flex items-center justify-center gap-1.5" aria-label="Pagination">
-      <button disabled={page <= 1} onClick={() => go(page - 1)} className="grid h-11 w-11 place-items-center rounded-xl border-2 border-line bg-surface disabled:opacity-40" aria-label="Page précédente">
+      <button disabled={page <= 1} onClick={() => go(page - 1)} className="grid h-11 w-11 place-items-center rounded-xl border border-line bg-surface disabled:opacity-40" aria-label="Page précédente">
         <ChevronLeft className="h-5 w-5" />
       </button>
       {nums.map((n, i) => (
@@ -216,13 +217,13 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
           {i > 0 && nums[i - 1] !== n - 1 && <span className="px-1 text-muted">…</span>}
           <button
             onClick={() => go(n)}
-            className={cn("h-11 min-w-11 rounded-xl px-3 font-extrabold transition", n === page ? "bg-brand text-on-brand shadow-[0_4px_0_var(--chunk)]" : "border-2 border-line bg-surface hover:border-brand")}
+            className={cn("h-11 min-w-11 rounded-xl px-3 font-bold transition", n === page ? "bg-brand text-on-brand" : "border border-line bg-surface hover:border-brand")}
           >
             {n}
           </button>
         </span>
       ))}
-      <button disabled={page >= pages} onClick={() => go(page + 1)} className="grid h-11 w-11 place-items-center rounded-xl border-2 border-line bg-surface disabled:opacity-40" aria-label="Page suivante">
+      <button disabled={page >= pages} onClick={() => go(page + 1)} className="grid h-11 w-11 place-items-center rounded-xl border border-line bg-surface disabled:opacity-40" aria-label="Page suivante">
         <ChevronRight className="h-5 w-5" />
       </button>
     </nav>

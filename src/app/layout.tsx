@@ -9,8 +9,8 @@ import { getCurrentUser } from "@/lib/auth";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Learn — Apprends à ton rythme", template: "%s · Learn" },
-  description: "Cours en ligne vidéo, quiz, certificats et gamification. Apprends à ton rythme, en français.",
+  title: { default: "Learn — Formations en ligne certifiantes", template: "%s · Learn" },
+  description: "Formations en ligne en français : vidéos courtes, quiz, certificats vérifiables. Apprenez à votre rythme.",
 };
 
 export const viewport: Viewport = {

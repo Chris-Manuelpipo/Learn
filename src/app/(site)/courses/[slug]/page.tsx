@@ -6,7 +6,6 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
 import { formatPrice } from "@/lib/currency";
-import { palette } from "@/lib/colors";
 import { formatDate, formatDuration, formatNumber, LEVEL_LABEL, timeAgo } from "@/lib/utils";
 import { Container } from "@/components/ui/section";
 import { Avatar } from "@/components/ui/avatar";
@@ -58,7 +57,6 @@ export default async function CoursePage({ params }: Props) {
     db.course.aggregate({ where: { instructorId: course.instructorId, status: "PUBLISHED" }, _sum: { studentsCount: true }, _avg: { ratingAvg: true } }),
   ]);
 
-  const p = palette(course.color);
   const lessons = course.chapters.flatMap((c) => c.lessons);
   const videoMinutes = lessons.filter((l) => l.type === "VIDEO").reduce((s, l) => s + l.durationMinutes, 0);
   const quizCount = lessons.filter((l) => l.type === "QUIZ").length;
@@ -69,16 +67,15 @@ export default async function CoursePage({ params }: Props) {
     { icon: PlayCircle, text: `${formatDuration(videoMinutes)} de vidéo` },
     { icon: ListChecks, text: `${lessons.length} leçons · ${quizCount} quiz` },
     ...(course.certified ? [{ icon: GraduationCap, text: "Certificat vérifiable" }] : []),
-    { icon: InfinityIcon, text: "Accès illimité, à ton rythme" },
+    { icon: InfinityIcon, text: "Accès illimité, à votre rythme" },
     { icon: Smartphone, text: "Sur mobile, tablette et ordinateur" },
   ];
 
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden text-white" style={{ background: `linear-gradient(120deg, var(--night) 0%, var(--night) 45%, ${p.ink} 100%)` }}>
-        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl" style={{ background: p.from }} />
-        <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full opacity-25 blur-3xl" style={{ background: p.to }} />
+      <section className="relative overflow-hidden text-white" style={{ background: "var(--night)" }}>
+        <div className="absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full opacity-[0.18] blur-3xl" style={{ background: "var(--brand)" }} />
         <Container className="relative grid gap-10 py-10 lg:grid-cols-[1fr_380px] lg:py-14">
           <div className="max-w-3xl">
             <nav className="mb-5 flex flex-wrap items-center gap-1 text-sm font-semibold text-white/60">
@@ -89,17 +86,17 @@ export default async function CoursePage({ params }: Props) {
               </Link>
             </nav>
             <div className="mb-4 flex flex-wrap gap-2">
-              {course.featured && <Pill solid color="sun">⭐ Coup de cœur</Pill>}
-              {course.certified && <Pill solid color="violet">🎓 Certifiant</Pill>}
-              <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-bold">{LEVEL_LABEL[course.level]}</span>
+              {course.featured && <span className="inline-flex items-center gap-1 rounded-full bg-white/12 px-2.5 py-1 text-xs font-semibold"><Star className="h-3.5 w-3.5" /> Sélection de l'équipe</span>}
+              {course.certified && <span className="inline-flex items-center gap-1 rounded-full bg-white/12 px-2.5 py-1 text-xs font-semibold"><GraduationCap className="h-3.5 w-3.5" /> Certifiant</span>}
+              <span className="rounded-full bg-white/12 px-2.5 py-1 text-xs font-semibold">{LEVEL_LABEL[course.level]}</span>
               {course.status !== "PUBLISHED" && <Pill solid color="coral">Aperçu · {course.status}</Pill>}
             </div>
-            <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">{course.title}</h1>
+            <h1 className="text-4xl font-bold leading-tight sm:text-5xl">{course.title}</h1>
             <p className="mt-4 text-lg text-white/75 sm:text-xl">{course.subtitle}</p>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-semibold">
               {course.ratingCount > 0 && (
                 <span className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-sun">{course.ratingAvg.toFixed(1)}</span>
+                  <span className="font-semibold">{course.ratingAvg.toFixed(1)}</span>
                   <Stars value={course.ratingAvg} />
                   <span className="text-white/60">({formatNumber(course.ratingCount)} avis)</span>
                 </span>
@@ -118,9 +115,9 @@ export default async function CoursePage({ params }: Props) {
               <Avatar user={course.instructor} size={40} />
               <span className="text-sm">
                 <span className="block text-white/60">Formateur</span>
-                <span className="flex items-center gap-1 font-extrabold">
+                <span className="flex items-center gap-1 font-bold">
                   {course.instructor.name}
-                  {course.instructor.instructorVerified && <BadgeCheck className="h-4 w-4 text-sky" />}
+                  {course.instructor.instructorVerified && <BadgeCheck className="h-4 w-4 text-brand-2" />}
                 </span>
               </span>
             </Link>
@@ -132,11 +129,11 @@ export default async function CoursePage({ params }: Props) {
         {/* COLONNE PRINCIPALE */}
         <div className="min-w-0 space-y-12 lg:order-1">
           <section className="card p-6 sm:p-8">
-            <h2 className="mb-5 text-2xl font-extrabold">Ce que tu vas apprendre</h2>
+            <h2 className="mb-5 text-2xl font-bold">Ce que vous allez apprendre</h2>
             <ul className="grid gap-3 sm:grid-cols-2">
               {course.outcomes.map((o) => (
                 <li key={o} className="flex gap-3">
-                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mint/15 text-mint">
+                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-ink">
                     <Check className="h-4 w-4" strokeWidth={3} />
                   </span>
                   <span className="text-ink-soft">{o}</span>
@@ -147,7 +144,7 @@ export default async function CoursePage({ params }: Props) {
 
           <section>
             <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
-              <h2 className="text-2xl font-extrabold">Programme du cours</h2>
+              <h2 className="text-2xl font-bold">Programme de la formation</h2>
               <p className="text-sm font-semibold text-muted">
                 {course.chapters.length} chapitres · {lessons.length} leçons · {formatDuration(course.durationMinutes)}
                 {hasFinal && " · examen final"}
@@ -162,7 +159,7 @@ export default async function CoursePage({ params }: Props) {
           <StudyPlanner totalMinutes={course.durationMinutes} defaultMinutes={user?.dailyGoalMinutes ?? 15} />
 
           <section>
-            <h2 className="mb-4 text-2xl font-extrabold">Prérequis</h2>
+            <h2 className="mb-4 text-2xl font-bold">Prérequis</h2>
             <ul className="space-y-2">
               {course.requirements.map((r) => (
                 <li key={r} className="flex items-center gap-3 text-ink-soft">
@@ -173,7 +170,7 @@ export default async function CoursePage({ params }: Props) {
           </section>
 
           <section>
-            <h2 className="mb-4 text-2xl font-extrabold">Description</h2>
+            <h2 className="mb-4 text-2xl font-bold">Description</h2>
             <div className="space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
               {course.description.split("\n\n").map((para, i) => (
                 <p key={i}>{para}</p>
@@ -182,17 +179,17 @@ export default async function CoursePage({ params }: Props) {
           </section>
 
           <section className="card p-6 sm:p-8">
-            <h2 className="mb-5 text-2xl font-extrabold">Ton formateur</h2>
+            <h2 className="mb-5 text-2xl font-bold">Votre formateur</h2>
             <div className="flex flex-col gap-5 sm:flex-row">
               <Avatar user={course.instructor} size={96} />
               <div>
-                <Link href={`/u/${course.instructor.username}`} className="flex items-center gap-1.5 text-xl font-extrabold hover:text-brand">
+                <Link href={`/u/${course.instructor.username}`} className="flex items-center gap-1.5 text-xl font-bold hover:text-brand">
                   {course.instructor.name}
-                  {course.instructor.instructorVerified && <BadgeCheck className="h-5 w-5 text-sky" />}
+                  {course.instructor.instructorVerified && <BadgeCheck className="h-5 w-5 text-brand" />}
                 </Link>
                 <p className="font-semibold text-muted">{course.instructor.headline}</p>
                 {course.instructor.instructorVerified && (
-                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sky/15 px-2.5 py-1 text-xs font-extrabold text-sky">
+                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-brand-soft px-2.5 py-1 text-xs font-semibold text-brand-ink">
                     <BadgeCheck className="h-3.5 w-3.5" /> Formateur certifié Learn
                   </span>
                 )}
@@ -204,7 +201,7 @@ export default async function CoursePage({ params }: Props) {
                     <Users className="h-4 w-4" /> {formatNumber(instructorStats._sum.studentsCount ?? 0)} apprenants
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <PlayCircle className="h-4 w-4" /> {course.instructor._count.coursesTaught} cours
+                    <PlayCircle className="h-4 w-4" /> {course.instructor._count.coursesTaught} formations
                   </span>
                 </div>
                 {course.instructor.bio && <p className="mt-4 leading-relaxed text-ink-soft">{course.instructor.bio}</p>}
@@ -213,11 +210,11 @@ export default async function CoursePage({ params }: Props) {
           </section>
 
           <section id="avis">
-            <h2 className="mb-5 text-2xl font-extrabold">Avis des apprenants</h2>
+            <h2 className="mb-5 text-2xl font-bold">Avis des apprenants</h2>
             {course.ratingCount > 0 ? (
               <div className="card mb-6 grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
                 <div className="text-center">
-                  <p className="font-display text-6xl font-extrabold text-sun">{course.ratingAvg.toFixed(1)}</p>
+                  <p className="text-6xl font-bold tracking-tight">{course.ratingAvg.toFixed(1)}</p>
                   <Stars value={course.ratingAvg} size={18} className="mt-1" />
                   <p className="mt-1 text-sm font-semibold text-muted">{formatNumber(course.ratingCount)} avis</p>
                 </div>
@@ -235,7 +232,7 @@ export default async function CoursePage({ params }: Props) {
                 </div>
               </div>
             ) : (
-              <p className="mb-6 text-muted">Pas encore d'avis. Sois le premier à partager ton expérience !</p>
+              <p className="mb-6 text-muted">Aucun avis pour le moment. Soyez le premier à partager votre expérience.</p>
             )}
             {enrollment && <ReviewForm courseId={course.id} initial={myReview ? { rating: myReview.rating, comment: myReview.comment } : null} />}
             <div className="mt-6 space-y-4">
@@ -244,7 +241,7 @@ export default async function CoursePage({ params }: Props) {
                   <Avatar user={r.user} size={44} />
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <p className="font-extrabold">{r.user.name}</p>
+                      <p className="font-bold">{r.user.name}</p>
                       <Stars value={r.rating} size={13} />
                       <span className="text-xs font-semibold text-muted">{timeAgo(r.createdAt)}</span>
                     </div>
@@ -271,27 +268,27 @@ export default async function CoursePage({ params }: Props) {
               {enrollment ? (
                 <>
                   <div className="mb-2 flex items-center justify-between text-sm font-bold">
-                    <span className="text-muted">Ta progression</span>
+                    <span className="text-muted">Votre progression</span>
                     <span className="text-brand">{enrollment.progress} %</span>
                   </div>
                   <ProgressBar value={enrollment.progress} />
                   <Link href={`/learn/${course.slug}`} className={buttonClass("primary", "lg", "mt-5 w-full")}>
-                    {enrollment.progress === 0 ? "Commencer le cours" : enrollment.progress === 100 ? "Revoir le cours" : "Continuer le cours"}
+                    {enrollment.progress === 0 ? "Commencer la formation" : enrollment.progress === 100 ? "Revoir la formation" : "Reprendre la formation"}
                   </Link>
                   <p className="mt-3 text-center text-xs font-semibold text-muted">Inscrit depuis le {formatDate(enrollment.createdAt)}</p>
                 </>
               ) : (
                 <>
                   <div className="flex items-baseline gap-3">
-                    <span className={`font-display text-4xl font-extrabold ${course.price === 0 ? "text-mint" : ""}`}>{priceLabel}</span>
+                    <span className={`text-4xl font-bold tracking-tight ${course.price === 0 ? "text-brand-ink" : ""}`}>{priceLabel}</span>
                     {course.price > 0 && currency !== "XAF" && <span className="text-sm font-semibold text-muted">{formatPrice(course.price, "XAF")}</span>}
                   </div>
                   <EnrollButton courseId={course.id} slug={course.slug} free={course.price === 0} loggedIn={!!user} priceLabel={priceLabel} />
-                  {course.price > 0 && <p className="mt-3 text-center text-xs font-semibold text-muted">💳 Carte · Orange Money · MTN MoMo · PayPal</p>}
+                  {course.price > 0 && <p className="mt-3 text-center text-xs text-muted">Carte bancaire · Orange Money · MTN MoMo · PayPal</p>}
                 </>
               )}
               <div className="mt-6 border-t border-line pt-5">
-                <p className="mb-3 text-sm font-extrabold">Ce cours comprend</p>
+                <p className="mb-3 text-sm font-bold">Cette formation comprend</p>
                 <ul className="space-y-2.5">
                   {includes.map((i) => (
                     <li key={i.text} className="flex items-center gap-3 text-sm font-medium text-ink-soft">
@@ -307,7 +304,7 @@ export default async function CoursePage({ params }: Props) {
 
       {similar.length > 0 && (
         <Container className="pb-10">
-          <h2 className="mb-6 text-2xl font-extrabold">Les apprenants ont aussi aimé</h2>
+          <h2 className="mb-6 text-2xl font-bold">Les apprenants ont aussi suivi</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {similar.map((c) => (
               <CourseCard key={c.id} course={c} currency={currency} />

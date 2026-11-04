@@ -22,7 +22,7 @@ export function AccentPicker({ current }: { current: PaletteName }) {
         setActive(previous);
         document.documentElement.dataset.palette = previous;
         toast.error(res.error);
-      } else toast.success(`Couleur « ${PALETTES[name].label} » appliquée 🎨`);
+      } else toast.success(`Couleur « ${PALETTES[name].label} » appliquée`);
     });
   };
 
@@ -40,12 +40,12 @@ export function AccentPicker({ current }: { current: PaletteName }) {
             onClick={() => choose(name)}
             aria-pressed={selected}
             className={cn(
-              "group relative overflow-hidden rounded-2xl border-2 bg-surface p-2 text-left transition hover:-translate-y-0.5",
-              selected ? "border-brand shadow-[0_4px_0_var(--chunk)]" : "border-line hover:border-line-strong",
+              "group relative overflow-hidden rounded-2xl border bg-surface p-2 text-left transition hover:-translate-y-0.5",
+              selected ? "border-brand ring-1 ring-brand" : "border-line hover:border-line-strong",
             )}
           >
             <span className="relative block h-16 overflow-hidden rounded-xl" style={{ background: `linear-gradient(135deg, ${a}, ${b})` }}>
-              <span className="absolute bottom-2 left-2 rounded-lg px-2 py-1 text-[11px] font-extrabold shadow-sm" style={{ background: light.brand, color: light.onBrand }}>
+              <span className="absolute bottom-2 left-2 rounded-lg px-2 py-1 text-[11px] font-bold shadow-sm" style={{ background: light.brand, color: light.onBrand }}>
                 Bouton
               </span>
               <span className="absolute right-2 top-2 h-5 w-5 rounded-full ring-2 ring-white/80" style={{ background: dark.brand }} title="Mode sombre" />
@@ -55,7 +55,7 @@ export function AccentPicker({ current }: { current: PaletteName }) {
                 </span>
               )}
             </span>
-            <span className="mt-2 block px-1 pb-0.5 text-sm font-extrabold">{label}</span>
+            <span className="mt-2 block px-1 pb-0.5 text-sm font-bold">{label}</span>
           </button>
         );
       })}

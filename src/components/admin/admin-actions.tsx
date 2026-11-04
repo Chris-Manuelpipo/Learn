@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { Star } from "lucide-react";
 import { reviewApplication, setCourseStatus, setUserRole, toggleFeatured, toggleVerified } from "@/app/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,8 +30,8 @@ export function ApplicationActions({ id }: { id: string }) {
     <div className="space-y-3">
       <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Message au candidat (optionnel)" className="h-10 text-sm" />
       <div className="flex gap-2">
-        <Button variant="mint" size="sm" loading={pending} onClick={() => run(() => reviewApplication(id, true, note), "Formateur approuvé et certifié ✅")}>
-          ✓ Approuver & certifier
+        <Button variant="primary" size="sm" loading={pending} onClick={() => run(() => reviewApplication(id, true, note), "Formateur approuvé et certifié")}>
+          Approuver et certifier
         </Button>
         <Button variant="secondary" size="sm" loading={pending} onClick={() => run(() => reviewApplication(id, false, note), "Candidature refusée")}>
           Refuser
@@ -59,8 +60,8 @@ export function CourseActions({ id, status, featured }: { id: string; status: Co
           Refuser
         </Button>
       )}
-      <Button size="sm" variant={featured ? "sun" : "ghost"} loading={pending} onClick={() => run(() => toggleFeatured(id))} title="Coup de cœur">
-        ⭐
+      <Button size="sm" variant={featured ? "soft" : "ghost"} loading={pending} onClick={() => run(() => toggleFeatured(id))} title={featured ? "Retirer de la sélection" : "Mettre en avant"}>
+        <Star className={featured ? "h-4 w-4 fill-current" : "h-4 w-4"} />
       </Button>
     </div>
   );
@@ -74,7 +75,7 @@ export function UserActions({ id, role, verified }: { id: string; role: Role; ve
         value={role}
         disabled={pending}
         onChange={(e) => run(() => setUserRole(id, e.target.value as Role), "Rôle mis à jour")}
-        className="h-9 rounded-xl border-2 border-line bg-surface px-2 text-sm font-bold"
+        className="h-9 rounded-xl border border-line bg-surface px-2 text-sm font-bold"
         aria-label="Rôle"
       >
         <option value="STUDENT">Étudiant</option>
@@ -83,7 +84,7 @@ export function UserActions({ id, role, verified }: { id: string; role: Role; ve
       </select>
       {role !== "STUDENT" && (
         <Button size="sm" variant={verified ? "soft" : "ghost"} loading={pending} onClick={() => run(() => toggleVerified(id))} title="Formateur certifié">
-          {verified ? "✓ Certifié" : "Certifier"}
+          {verified ? "Certifié" : "Certifier"}
         </Button>
       )}
     </div>

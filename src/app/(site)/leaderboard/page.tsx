@@ -1,18 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Flame, Trophy } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { leaderboard, startOfWeek } from "@/lib/stats";
 import { leagueFor, levelInfo } from "@/lib/gamification";
 import { formatNumber, cn } from "@/lib/utils";
 import { Container } from "@/components/ui/section";
 import { Avatar } from "@/components/ui/avatar";
+import { buttonClass } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Classement" };
 
 const PERIODS = [
   ["week", "Cette semaine"],
   ["month", "Ce mois-ci"],
-  ["all", "Tous les temps"],
+  ["all", "Depuis le début"],
+] as const;
+
+const PODIUM = ["#d4a017", "#9aa4b2", "#b87333"];
+
+const LEAGUES = [
+  ["Bronze", "0 à 119 XP", "#b87333"],
+  ["Argent", "120 à 299 XP", "#9aa4b2"],
+  ["Or", "300 à 599 XP", "#d4a017"],
+  ["Diamant", "600 XP et plus", "#38bdf8"],
 ] as const;
 
 export default async function LeaderboardPage({ searchParams }: { searchParams: Promise<{ period?: string }> }) {
@@ -25,98 +36,94 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
   const myIndex = user ? rows.findIndex((r) => r.user.id === user.id) : -1;
 
   return (
-    <div>
-      <section className="relative overflow-hidden bg-gradient-to-b from-night to-night-2 pb-32 pt-12 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,194,61,.25),transparent_50%)]" />
-        <Container className="relative text-center">
-          <p className="text-5xl">🏆</p>
-          <h1 className="mt-3 text-4xl font-extrabold sm:text-5xl">Classement</h1>
-          <p className="mt-2 text-white/70">Gagne de l'XP en apprenant et grimpe parmi les meilleurs apprenants.</p>
-          <div className="mx-auto mt-6 inline-flex rounded-2xl bg-white/10 p-1.5">
-            {PERIODS.map(([k, l]) => (
-              <Link key={k} href={`/leaderboard?period=${k}`} className={cn("rounded-xl px-4 py-2 text-sm font-extrabold transition", period === k ? "bg-white text-[#16161a]" : "text-white/75 hover:text-white")}>
-                {l}
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <Container className="-mt-24 max-w-4xl">
-        <div className="grid grid-cols-3 items-end gap-3 sm:gap-6">
-          {[1, 0, 2].map((i) => {
-            const r = podium[i];
-            if (!r) return <div key={i} />;
-            const h = ["h-40 sm:h-48", "h-28 sm:h-36", "h-20 sm:h-28"][i];
-            const color = ["from-[#ffc93d] to-[#ff9f1c]", "from-[#d9dbe8] to-[#a9adc4]", "from-[#ffb08a] to-[#e07a4f]"][i];
-            return (
-              <Link href={`/u/${r.user.username}`} key={r.user.id} className="group flex flex-col items-center">
-                <div className="relative">
-                  {i === 0 && <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-3xl">👑</span>}
-                  <Avatar user={r.user} size={i === 0 ? 88 : 68} ring className="shadow-xl transition group-hover:scale-105" />
-                </div>
-                <p className="mt-3 max-w-full truncate text-center text-sm font-extrabold sm:text-base">{r.user.name}</p>
-                <p className="text-sm font-extrabold text-brand">{formatNumber(r.xp)} XP</p>
-                <div className={cn("mt-3 grid w-full place-items-center rounded-t-3xl bg-gradient-to-b font-display text-4xl font-extrabold text-white shadow-inner", h, color)}>{i + 1}</div>
-              </Link>
-            );
-          })}
+    <Container className="max-w-4xl py-10">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Classement</h1>
+          <p className="mt-1 text-muted">Les apprenants les plus actifs, selon l'XP gagnée sur la période.</p>
         </div>
-
-        <div className="card mt-0 overflow-hidden rounded-t-none">
-          {rest.map((r, i) => {
-            const me = r.user.id === user?.id;
-            const lv = levelInfo(r.user.xp);
-            const league = since ? leagueFor(r.xp) : null;
-            return (
-              <Link
-                key={r.user.id}
-                href={`/u/${r.user.username}`}
-                className={cn("flex items-center gap-3 border-b border-line px-4 py-3 transition last:border-0 hover:bg-surface-2 sm:gap-4 sm:px-6", me && "bg-brand-soft hover:bg-brand-soft")}
-              >
-                <span className="w-8 text-center font-display text-lg font-extrabold text-muted">{i + 4}</span>
-                <Avatar user={r.user} size={44} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-extrabold">
-                    {r.user.name} {me && <span className="text-brand">(toi)</span>}
-                  </p>
-                  <p className="text-xs font-semibold text-muted">
-                    Niv. {lv.level} · {lv.title} {r.user.streak > 0 && `· 🔥 ${r.user.streak}`}
-                  </p>
-                </div>
-                {league && <span className="hidden text-xl sm:block" title={`Ligue ${league.name}`}>{league.emoji}</span>}
-                <span className="font-display font-extrabold text-brand">{formatNumber(r.xp)} XP</span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {user && myIndex === -1 && (
-          <div className="sticky bottom-4 mt-6 flex items-center gap-4 rounded-3xl bg-night p-4 text-white shadow-2xl">
-            <Avatar user={user} size={44} />
-            <p className="flex-1 text-sm font-bold">Tu n'es pas encore dans le top 50 sur cette période. Une leçon = 10 XP, un quiz = 25 XP. À toi de jouer !</p>
-            <Link href="/my-courses" className="rounded-xl bg-sun px-4 py-2 text-sm font-extrabold text-[#4a2f00]">
-              Apprendre
+        <div className="inline-flex rounded-xl bg-surface-2 p-1">
+          {PERIODS.map(([k, l]) => (
+            <Link key={k} href={`/leaderboard?period=${k}`} className={cn("rounded-lg px-3.5 py-2 text-sm font-medium transition", period === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink")}>
+              {l}
             </Link>
-          </div>
-        )}
-        <div className="mt-8 grid gap-3 sm:grid-cols-4">
-          {[
-            ["🥉", "Bronze", "0 – 119 XP"],
-            ["🥈", "Argent", "120 – 299 XP"],
-            ["🥇", "Or", "300 – 599 XP"],
-            ["💎", "Diamant", "600+ XP"],
-          ].map(([e, n, r]) => (
-            <div key={n} className="card flex items-center gap-3 p-4">
-              <span className="text-3xl">{e}</span>
-              <div>
-                <p className="font-extrabold">Ligue {n}</p>
-                <p className="text-xs font-semibold text-muted">{r} / semaine</p>
-              </div>
-            </div>
           ))}
         </div>
-      </Container>
-    </div>
+      </div>
+
+      {/* Podium */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {podium.map((r, i) => (
+          <Link key={r.user.id} href={`/u/${r.user.username}`} className={cn("card flex items-center gap-4 p-5 transition hover:border-line-strong sm:flex-col sm:text-center", i === 0 && "sm:order-2", i === 1 && "sm:order-1", i === 2 && "sm:order-3")}>
+            <div className="relative">
+              <Avatar user={r.user} size={i === 0 ? 72 : 60} />
+              <span className="absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full text-xs font-bold text-white ring-2 ring-surface" style={{ background: PODIUM[i] }}>
+                {i + 1}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="truncate font-semibold">{r.user.name}</p>
+              <p className="text-sm font-semibold text-brand-ink">{formatNumber(r.xp)} XP</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="card mt-6 overflow-hidden">
+        {rest.map((r, i) => {
+          const me = r.user.id === user?.id;
+          const lv = levelInfo(r.user.xp);
+          const league = since ? leagueFor(r.xp) : null;
+          return (
+            <Link
+              key={r.user.id}
+              href={`/u/${r.user.username}`}
+              className={cn("flex items-center gap-3 border-b border-line px-4 py-3 transition last:border-0 hover:bg-surface-2 sm:gap-4 sm:px-6", me && "bg-brand-soft hover:bg-brand-soft")}
+            >
+              <span className="w-7 text-center text-sm font-semibold text-muted">{i + 4}</span>
+              <Avatar user={r.user} size={40} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold">
+                  {r.user.name} {me && <span className="font-normal text-muted">(vous)</span>}
+                </p>
+                <p className="flex items-center gap-1.5 text-xs text-muted">
+                  Niveau {lv.level} · {lv.title}
+                  {r.user.streak > 0 && (
+                    <>
+                      <span>·</span>
+                      <Flame className="h-3 w-3 text-coral" /> {r.user.streak}
+                    </>
+                  )}
+                </p>
+              </div>
+              {league && <Trophy className="hidden h-4 w-4 sm:block" style={{ color: league.tone }} aria-label={`Ligue ${league.name}`} />}
+              <span className="text-sm font-semibold">{formatNumber(r.xp)} XP</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {user && myIndex === -1 && (
+        <div className="sticky bottom-4 mt-6 flex items-center gap-4 rounded-2xl p-4 text-white shadow-xl" style={{ background: "var(--night)" }}>
+          <Avatar user={user} size={40} />
+          <p className="flex-1 text-sm text-white/85">Vous n'êtes pas encore dans les 50 premiers sur cette période. Une leçon rapporte 10 XP, un quiz réussi 25 XP.</p>
+          <Link href="/my-courses" className={buttonClass("primary", "sm")}>
+            Continuer
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-4">
+        {LEAGUES.map(([n, r, tone]) => (
+          <div key={n} className="card flex items-center gap-3 p-4">
+            <Trophy className="h-5 w-5 shrink-0" style={{ color: tone }} />
+            <div>
+              <p className="text-sm font-semibold">Ligue {n}</p>
+              <p className="text-xs text-muted">{r} par semaine</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Container>
   );
 }

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { randomUUID } from "node:crypto";
 import { CATEGORIES, QUESTION_BANK, type Lvl } from "./data/courses";
 import { BADGES } from "../src/lib/badges";
+import { courseCover, DEMO_STUDENT_PHOTO, instructorPhoto, studentPhoto } from "./data/photos";
 
 const db = new PrismaClient();
 
@@ -37,7 +38,6 @@ const VIDEOS = ["/videos/sintel-trailer.mp4", "/videos/bunny-trailer.mp4", "/vid
 const FIRST = ["Aïcha", "Brice", "Chantal", "Daniel", "Estelle", "Fabrice", "Grace", "Hervé", "Inès", "Junior", "Kevin", "Laure", "Michel", "Nadège", "Olivier", "Prisca", "Quentin", "Rachel", "Samuel", "Tatiana", "Ulrich", "Vanessa", "William", "Yasmine", "Zacharie", "Armel", "Blaise", "Carine", "Dorothée", "Emmanuel", "Fatou", "Gaël", "Hawa", "Ibrahim", "Joëlle", "Karim", "Léa", "Moussa", "Nina", "Oumar", "Patrick", "Rokia", "Sandrine", "Thierry", "Awa", "Boris", "Cédric", "Diane", "Éric", "Flora", "Ghislain", "Hugo", "Ivana", "Jordan", "Kelly", "Lionel", "Mariam", "Noël", "Orphée", "Paul", "Ruth", "Steve", "Thècle", "Valdès", "Wilfried", "Yvan", "Zoé"];
 const LAST = ["Mbarga", "Nkoulou", "Fotso", "Tchoumi", "Essomba", "Ndiaye", "Kamga", "Diallo", "Mballa", "Ngono", "Atangana", "Traoré", "Owona", "Bello", "Koné", "Ekambi", "Tchakounté", "Manga", "Ndongo", "Sow", "Fokou", "Abena", "Eto'o", "Biya", "Moukoko", "Djeumen", "Kouam", "Onana", "Mvondo", "Ngassa", "Dubois", "Martin", "Lefèvre", "Mendy", "Camara", "Toure", "Yao", "Kouassi", "Sylla", "Keita"];
 const COUNTRIES = ["Cameroun", "Cameroun", "Cameroun", "Sénégal", "Côte d'Ivoire", "Gabon", "France", "Belgique", "Canada", "Bénin", "Togo", "Mali", "Congo"];
-const EMOJIS = ["🦊", "🐼", "🦁", "🐯", "🐨", "🐸", "🦉", "🐙", "🦄", "🐳", "🐝", "🦋", "🐢", "🐧", "🦒", "🐬", "🌻", "⚡", "🚀", "🎧"];
 const COLORS = ["violet", "coral", "mint", "sky", "sun", "pink", "lime", "ocean"];
 
 const REVIEWS: [number, string][] = [
@@ -94,9 +94,9 @@ function article(courseTitle: string, chapter: string, lesson: string) {
 
 ## L'essentiel
 
-Dans cette leçon « ${lesson} », on prend le temps de décomposer chaque idée en petites étapes. C'est volontaire : ton cerveau retient mieux des informations courtes, reliées entre elles et revues régulièrement.
+Dans cette leçon, « ${lesson} », chaque idée est décomposée en petites étapes. C'est volontaire : on retient mieux des informations courtes, reliées entre elles et revues régulièrement.
 
-Commence par lire cette fiche une première fois sans prendre de notes. Puis, ferme-la et essaie de reformuler les points importants avec tes propres mots : c'est le **rappel actif**, l'une des techniques d'apprentissage les plus efficaces.
+Lisez d'abord cette fiche une première fois sans prendre de notes. Fermez-la ensuite et reformulez les points importants avec vos propres mots : c'est le **rappel actif**, l'une des techniques d'apprentissage les plus efficaces.
 
 ### Les trois idées à retenir
 
@@ -104,15 +104,15 @@ Commence par lire cette fiche une première fois sans prendre de notes. Puis, fe
 2. La pratique régulière vaut mieux qu'une longue session isolée.
 3. Les erreurs font partie du processus : elles indiquent ce qu'il faut revoir.
 
-> 💡 **Astuce** — Note dans l'onglet « Mes notes » une question que tu te poses encore. Tu y reviendras après le quiz du chapitre.
+> **Conseil** — Notez dans l'onglet « Mes notes » une question qui reste ouverte. Vous y reviendrez après le quiz du chapitre.
 
 ## Pour aller plus loin
 
-Applique dès aujourd'hui ce que tu viens d'apprendre sur un petit exemple personnel. Dix minutes de pratique suffisent pour ancrer durablement la leçon.`;
+Appliquez dès aujourd'hui ce que vous venez d'apprendre sur un petit exemple personnel. Dix minutes de pratique suffisent pour ancrer durablement la leçon.`;
 }
 
 async function main() {
-  console.log("🧹 Nettoyage…");
+  console.log("Nettoyage…");
   await db.$transaction([
     db.notification.deleteMany(),
     db.activity.deleteMany(),
@@ -132,12 +132,12 @@ async function main() {
     db.user.deleteMany(),
   ]);
 
-  console.log("🏅 Badges…");
+  console.log("Badges…");
   await db.badge.createMany({ data: BADGES.map((b) => ({ ...b })) });
   const badges = await db.badge.findMany();
   const badgeBySlug = Object.fromEntries(badges.map((b) => [b.slug, b]));
 
-  console.log("👥 Utilisateurs…");
+  console.log("Utilisateurs…");
   const password = await bcrypt.hash("Learn2026!", 10);
   const usedUsernames = new Set<string>();
   const uname = (name: string) => {
@@ -150,7 +150,7 @@ async function main() {
   };
 
   const admin = await db.user.create({
-    data: { name: "Équipe Learn", username: uname("admin"), email: "admin@learn.dev", passwordHash: password, role: "ADMIN", avatarEmoji: "🛰️", avatarColor: "violet", headline: "Administration de la plateforme", country: "Cameroun", xp: 0 },
+    data: { name: "Équipe Learn", username: uname("admin"), email: "admin@learn.dev", passwordHash: password, role: "ADMIN", avatarColor: "violet", headline: "Administration de la plateforme", country: "Cameroun", xp: 0 },
   });
 
   const instructorProfiles = [
@@ -187,8 +187,8 @@ async function main() {
           instructorVerified: i % 5 !== 4,
           headline,
           expertise: cat,
-          bio: `${headline}. J'accompagne des apprenants depuis plus de ${int(4, 12)} ans et je crois qu'on apprend mieux en pratiquant, pas à pas, à son rythme.`,
-          avatarEmoji: pick(EMOJIS),
+          bio: `${headline}. J'accompagne des apprenants depuis plus de ${int(4, 12)} ans, avec une conviction : on apprend mieux en pratiquant, pas à pas, à son rythme.`,
+          avatarUrl: instructorPhoto(name),
           avatarColor: pick(COLORS),
           country: pick(COUNTRIES),
           xp: int(300, 2500),
@@ -207,7 +207,7 @@ async function main() {
       username: uname(name),
       email: `${slugify(name).replace(/-/g, ".")}.${i}@exemple.cm`,
       passwordHash: password,
-      avatarEmoji: pick(EMOJIS),
+      avatarUrl: studentPhoto(name, rand),
       avatarColor: pick(COLORS),
       country: pick(COUNTRIES),
       headline: pick(["Étudiant·e en informatique", "Développeur·se junior", "Entrepreneur·e", "En reconversion", "Étudiant·e en gestion", "Passionné·e de design", "Chef de projet", "Lycéen·ne curieux·se", null]),
@@ -223,7 +223,7 @@ async function main() {
       username: uname("alex"),
       email: "etudiant@learn.dev",
       passwordHash: password,
-      avatarEmoji: "🦊",
+      avatarUrl: DEMO_STUDENT_PHOTO,
       avatarColor: "coral",
       headline: "Étudiant en génie logiciel",
       bio: "Curieux de tout, j'apprends le développement web et le design en parallèle de mes études.",
@@ -233,7 +233,7 @@ async function main() {
     },
   });
 
-  console.log("📚 Catégories et cours…");
+  console.log("Catégories et cours…");
   const courseRows: Prisma.CourseCreateManyInput[] = [];
   const chapterRows: Prisma.ChapterCreateManyInput[] = [];
   const lessonRows: Prisma.LessonCreateManyInput[] = [];
@@ -262,7 +262,7 @@ async function main() {
     const catInstructors = instructors.filter((u) => u.expertise === cat.slug);
     const bank = QUESTION_BANK[cat.slug];
 
-    for (const [ci, [title, subtitle, emoji, lvl, price, chapters]] of cat.courses.entries()) {
+    for (const [ci, [title, subtitle, lvl, price, chapters]] of cat.courses.entries()) {
       const courseId = id();
       const slug = slugify(title);
       const instructor = catInstructors[ci % catInstructors.length];
@@ -311,8 +311,8 @@ async function main() {
         slug,
         title,
         subtitle,
-        description: `${subtitle}\n\nCe cours a été conçu pour que tu progresses à ton rythme, avec des leçons courtes, des démonstrations concrètes et des quiz réguliers pour ancrer durablement tes connaissances. Tu avanceras chapitre par chapitre : ${chapters.slice(0, -1).join(", ")} et enfin ${chapters[chapters.length - 1]}.\n\nÀ la fin, tu sauras mettre en pratique ce que tu as appris sur un vrai projet${certified ? " et tu pourras obtenir un certificat vérifiable à partager sur LinkedIn" : ""}.`,
-        emoji,
+        description: `${subtitle}\n\nCette formation a été conçue pour que vous progressiez à votre rythme, avec des leçons courtes, des démonstrations concrètes et des quiz réguliers pour ancrer durablement vos connaissances. Vous avancerez chapitre par chapitre : ${chapters.slice(0, -1).join(", ")} et enfin ${chapters[chapters.length - 1]}.\n\nÀ la fin, vous saurez mettre en pratique ce que vous avez appris sur un vrai projet${certified ? " et vous pourrez obtenir un certificat vérifiable à partager sur LinkedIn" : ""}.`,
+        coverUrl: courseCover(cat.slug, ci),
         color: cat.courses.length ? [cat.color, "violet", "coral", "mint", "sky", "pink", "sun", "ocean", "lime"][(ci * 3) % 9] : cat.color,
         level: LEVELS[lvl],
         price,
@@ -344,7 +344,7 @@ async function main() {
   await chunked(optionRows, (c) => db.option.createMany({ data: c }));
   console.log(`   ${courseRows.length} cours, ${lessonRows.length} leçons, ${questionRows.length} questions`);
 
-  console.log("🎒 Inscriptions, progression, avis…");
+  console.log("Inscriptions, progression, avis…");
   const enrollRows: Prisma.EnrollmentCreateManyInput[] = [];
   const progressRows: Prisma.LessonProgressCreateManyInput[] = [];
   const paymentRows: Prisma.PaymentCreateManyInput[] = [];
@@ -476,7 +476,7 @@ async function main() {
   enroll(demo.id, bySlug("react-19-interfaces-reactives"), 60, 25, { review: false, method: "MTN_MOMO" });
   enroll(demo.id, bySlug("figma-de-a-a-z"), 25, 12, { review: false, method: "ORANGE_MONEY" });
   enroll(demo.id, bySlug("python-les-fondamentaux"), 10, 4, { review: false });
-  enroll(demo.id, bySlug("html-css-creer-ton-premier-site"), 100, 35, { review: true });
+  enroll(demo.id, bySlug("html-css-creer-votre-premier-site"), 100, 35, { review: true });
   for (let d = 0; d < 6; d++) {
     activityRows.push({ id: id(), userId: demo.id, type: "lesson", label: "Leçon terminée", xp: 30, minutes: int(12, 28), createdAt: daysAgo(d) });
     xpByUser.set(demo.id, (xpByUser.get(demo.id) ?? 0) + 30);
@@ -500,14 +500,14 @@ async function main() {
   await chunked(activityRows, (c) => db.activity.createMany({ data: c }));
   await chunked(userBadgeRows, (c) => db.userBadge.createMany({ data: c, skipDuplicates: true }));
 
-  console.log("📊 Statistiques des cours…");
+  console.log("Statistiques des cours…");
   await db.$executeRaw`
     UPDATE "Course" c SET
       "studentsCount" = COALESCE((SELECT COUNT(*) FROM "Enrollment" e WHERE e."courseId" = c.id), 0),
       "ratingCount" = COALESCE((SELECT COUNT(*) FROM "Review" r WHERE r."courseId" = c.id), 0),
       "ratingAvg" = COALESCE((SELECT ROUND(AVG(r.rating)::numeric, 1) FROM "Review" r WHERE r."courseId" = c.id), 0)`;
 
-  console.log("🔖 Favoris, notes, notifications, candidatures…");
+  console.log("Favoris, notes, notifications, candidatures…");
   await db.favorite.createMany({
     data: ["ux-design-les-fondamentaux", "next-js-le-framework-full-stack", "ia-generative-et-prompt-engineering"].map((s) => ({ userId: demo.id, courseId: bySlug(s).id })),
   });
@@ -521,12 +521,12 @@ async function main() {
   });
   await db.notification.createMany({
     data: [
-      { userId: demo.id, title: "Ta série est en feu 🔥", body: "6 jours d'affilée ! Encore un jour pour débloquer « Semaine de feu ».", emoji: "🔥", href: "/badges", createdAt: daysAgo(0, 8) },
-      { userId: demo.id, title: "Certificat obtenu ! 🎓", body: "Félicitations, tu es certifié en « Apprendre à apprendre ».", emoji: "🎓", href: "/certificates", read: true, createdAt: daysAgo(10) },
-      { userId: demo.id, title: "Nouveau cours disponible", body: "« Créer un chatbot avec l'API Claude » vient d'être publié.", emoji: "✨", href: "/courses/creer-un-chatbot-avec-l-api-claude", createdAt: daysAgo(2) },
+      { userId: demo.id, title: "Série de 6 jours", body: "Encore un jour pour obtenir le badge « Semaine complète ».", icon: "flame", href: "/badges", createdAt: daysAgo(0, 8) },
+      { userId: demo.id, title: "Certificat obtenu", body: "Félicitations, vous êtes certifié en « Apprendre à apprendre ».", icon: "graduation-cap", href: "/certificates", read: true, createdAt: daysAgo(10) },
+      { userId: demo.id, title: "Nouvelle formation disponible", body: "« Créer un chatbot avec l'API Claude » vient d'être publiée.", icon: "sparkles", href: "/courses/creer-un-chatbot-avec-l-api-claude", createdAt: daysAgo(2) },
     ],
   });
-  await db.notification.create({ data: { userId: admin.id, title: "Nouvelles candidatures formateur", body: "3 candidatures attendent ta validation.", emoji: "🧑‍🏫", href: "/admin/applications" } });
+  await db.notification.create({ data: { userId: admin.id, title: "Nouvelles candidatures formateur", body: "3 candidatures attendent votre validation.", icon: "user-check", href: "/admin/applications" } });
 
   const applicants = shuffle(students).slice(0, 4);
   await db.instructorApplication.createMany({
@@ -542,7 +542,7 @@ async function main() {
   });
 
   const counts = await Promise.all([db.user.count(), db.course.count({ where: { status: "PUBLISHED" } }), db.enrollment.count(), db.certificate.count()]);
-  console.log(`✅ Terminé : ${counts[0]} utilisateurs, ${counts[1]} cours publiés, ${counts[2]} inscriptions, ${counts[3]} certificats.`);
+  console.log(`Terminé : ${counts[0]} utilisateurs, ${counts[1]} cours publiés, ${counts[2]} inscriptions, ${counts[3]} certificats.`);
 }
 
 main()

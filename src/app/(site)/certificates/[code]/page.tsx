@@ -25,10 +25,10 @@ export default async function CertificatePage({ params }: { params: Promise<{ co
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-mint/15 px-3 py-1 text-sm font-extrabold text-[#0b8a6a] dark:text-mint">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-sm font-bold text-brand-ink">
               <ShieldCheck className="h-4 w-4" /> Certificat authentique
             </p>
-            <h1 className="mt-3 text-3xl font-extrabold sm:text-4xl">{mine ? "Félicitations ! 🎉" : `Certificat de ${cert.user.name}`}</h1>
+            <h1 className="mt-3 text-3xl font-bold sm:text-4xl">{mine ? "Félicitations" : `Certificat de ${cert.user.name}`}</h1>
             <p className="mt-1 text-muted">{cert.course.title}</p>
           </div>
         </div>
