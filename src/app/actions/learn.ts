@@ -8,7 +8,7 @@ import { XP } from "@/lib/gamification";
 
 async function assertEnrolled(userId: string, courseId: string) {
   const e = await db.enrollment.findUnique({ where: { userId_courseId: { userId, courseId } } });
-  if (!e) throw new Error("Tu n'es pas inscrit à ce cours.");
+  if (!e) throw new Error("Vous n'êtes pas inscrit à cette formation.");
   return e;
 }
 
@@ -18,7 +18,7 @@ export async function completeLesson(lessonId: string): Promise<LessonResult | {
   const user = await getCurrentUser();
   if (!user) return { error: "Session expirée." };
   const lesson = await db.lesson.findUniqueOrThrow({ where: { id: lessonId } });
-  if (lesson.type === "QUIZ") return { error: "Réussis le quiz pour valider cette leçon." };
+  if (lesson.type === "QUIZ") return { error: "Réussissez le quiz pour valider cette leçon." };
   return markLessonDone(user, lessonId);
 }
 

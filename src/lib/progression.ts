@@ -6,7 +6,7 @@ import type { BadgeSlug } from "./badges";
 export type Reward = {
   xp: number;
   levelUp: number | null;
-  badges: { name: string; emoji: string; description: string }[];
+  badges: { name: string; icon: string; color: string; description: string }[];
   streak: number;
 };
 
@@ -44,7 +44,7 @@ export async function awardXp(
 
   await db.activity.create({ data: { userId, type, label, xp: amount, minutes } });
   if (goalReached) {
-    await db.activity.create({ data: { userId, type: "goal", label: "Objectif quotidien atteint 🎯", xp: XP.DAILY_GOAL } });
+    await db.activity.create({ data: { userId, type: "goal", label: "Objectif quotidien atteint", xp: XP.DAILY_GOAL } });
   }
 
   const updated = await db.user.update({
@@ -69,7 +69,7 @@ export async function awardXp(
   const newLevel = levelFromXp(finalXp);
   if (newLevel > oldLevel) {
     await db.notification.create({
-      data: { userId, title: `Niveau ${newLevel} atteint !`, body: "Ta persévérance paie. Continue comme ça !", emoji: "🆙", href: "/dashboard" },
+      data: { userId, title: `Niveau ${newLevel} atteint`, body: "Votre régularité porte ses fruits.", icon: "trending-up", href: "/dashboard" },
     });
     // Les badges de niveau peuvent dépendre du nouveau total.
     badges.push(...(await checkBadges(userId, { hour: now.getHours(), type: "level" })));
@@ -78,7 +78,7 @@ export async function awardXp(
   return {
     xp: total,
     levelUp: newLevel > oldLevel ? newLevel : null,
-    badges: badges.map((b) => ({ name: b.name, emoji: b.emoji, description: b.description })),
+    badges: badges.map((b) => ({ name: b.name, icon: b.icon, color: b.color, description: b.description })),
     streak,
   };
 }
@@ -125,9 +125,9 @@ async function checkBadges(userId: string, ctx: { hour: number; type: string }) 
   await db.notification.createMany({
     data: badges.map((b) => ({
       userId,
-      title: `Badge débloqué : ${b.name}`,
+      title: `Badge obtenu : ${b.name}`,
       body: b.description,
-      emoji: b.emoji,
+      icon: "award",
       href: "/badges",
     })),
   });
@@ -177,7 +177,7 @@ export async function maybeIssueCertificate(userId: string, courseId: string) {
 
   const cert = await db.certificate.create({ data: { userId, courseId, score, code: certificateCode() } });
   await db.notification.create({
-    data: { userId, title: "Certificat obtenu ! 🎓", body: `Félicitations, tu es certifié·e en « ${course.title} ».`, emoji: "🎓", href: `/certificates/${cert.code}` },
+    data: { userId, title: "Certificat obtenu", body: `Félicitations, vous êtes certifié(e) en « ${course.title} ».`, icon: "graduation-cap", href: `/certificates/${cert.code}` },
   });
   return cert;
 }

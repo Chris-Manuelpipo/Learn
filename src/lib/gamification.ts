@@ -47,8 +47,8 @@ export function levelInfo(xp: number) {
 }
 
 export function leagueFor(weeklyXp: number) {
-  if (weeklyXp >= 600) return { name: "Diamant", emoji: "💎", color: "sky" };
-  if (weeklyXp >= 300) return { name: "Or", emoji: "🥇", color: "sun" };
-  if (weeklyXp >= 120) return { name: "Argent", emoji: "🥈", color: "violet" };
-  return { name: "Bronze", emoji: "🥉", color: "coral" };
+  if (weeklyXp >= 600) return { name: "Diamant", tone: "#38bdf8" };
+  if (weeklyXp >= 300) return { name: "Or", tone: "#eab308" };
+  if (weeklyXp >= 120) return { name: "Argent", tone: "#94a3b8" };
+  return { name: "Bronze", tone: "#c2773d" };
 }

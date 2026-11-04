@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { slugify } from "@/lib/utils";
 import { PALETTE_KEYS } from "@/lib/colors";
+import { saveImage } from "@/lib/uploads";
 import type { FormState } from "./auth";
 
 async function instructor() {
@@ -18,7 +19,7 @@ async function instructor() {
 async function ownCourse(courseId: string) {
   const user = await instructor();
   const course = await db.course.findUniqueOrThrow({ where: { id: courseId } });
-  if (course.instructorId !== user.id && user.role !== "ADMIN") throw new Error("Ce cours ne t'appartient pas.");
+  if (course.instructorId !== user.id && user.role !== "ADMIN") throw new Error("Vous n'êtes pas le formateur de cette formation.");
   return { user, course };
 }
 
@@ -52,10 +53,15 @@ const InfoSchema = z.object({
   title: z.string().trim().min(5, "Titre : 5 caractères minimum").max(90),
   subtitle: z.string().trim().min(10, "Sous-titre : 10 caractères minimum").max(160),
   description: z.string().trim().max(5000).default(""),
-  categoryId: z.string().min(1, "Choisis une catégorie"),
+  categoryId: z.string().min(1, "Choisissez une catégorie"),
   level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]),
   price: z.coerce.number().int().min(0).max(1_000_000),
-  emoji: z.string().min(1).max(8),
+  coverUrl: z
+    .string()
+    .trim()
+    .max(600)
+    .refine((v) => !v || /^(https?:\/\/|\/api\/uploads\/)/.test(v), "L'adresse de l'image doit commencer par https://")
+    .optional(),
   color: z.enum(PALETTE_KEYS as [string, ...string[]]),
   certified: z.coerce.boolean().default(false),
   outcomes: z.string().default(""),
@@ -64,11 +70,20 @@ const InfoSchema = z.object({
 
 const lines = (s: string) => s.split("\n").map((l) => l.trim()).filter(Boolean).slice(0, 12);
 
-export async function createCourse(_: FormState, formData: FormData): Promise<FormState> {
-  const user = await instructor();
+/** Valide le formulaire d'informations ; un fichier envoyé remplace l'URL de couverture saisie. */
+async function parseInfo(formData: FormData, prefix: string) {
   const parsed = InfoSchema.safeParse({ ...Object.fromEntries(formData), certified: formData.get("certified") === "on" });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const d = parsed.data;
+  const upload = await saveImage(formData.get("cover"), prefix, 4);
+  if (upload.error) return { error: upload.error };
+  return { data: { ...parsed.data, coverUrl: upload.url ?? (parsed.data.coverUrl || null) } };
+}
+
+export async function createCourse(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await instructor();
+  const info = await parseInfo(formData, `cover-${user.id}`);
+  if (!info.data) return { error: info.error };
+  const d = info.data;
   const course = await db.course.create({
     data: {
       title: d.title,
@@ -78,7 +93,7 @@ export async function createCourse(_: FormState, formData: FormData): Promise<Fo
       categoryId: d.categoryId,
       level: d.level,
       price: d.price,
-      emoji: d.emoji,
+      coverUrl: d.coverUrl,
       color: d.color,
       certified: d.certified,
       outcomes: lines(d.outcomes),
@@ -93,15 +108,15 @@ export async function createCourse(_: FormState, formData: FormData): Promise<Fo
 
 export async function updateCourseInfo(courseId: string, _: FormState, formData: FormData): Promise<FormState> {
   await ownCourse(courseId);
-  const parsed = InfoSchema.safeParse({ ...Object.fromEntries(formData), certified: formData.get("certified") === "on" });
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const d = parsed.data;
+  const info = await parseInfo(formData, `cover-${courseId}`);
+  if (!info.data) return { error: info.error };
+  const d = info.data;
   await db.course.update({
     where: { id: courseId },
     data: { ...d, description: d.description || d.subtitle, outcomes: lines(d.outcomes), requirements: lines(d.requirements) },
   });
   revalidatePath(`/studio/courses/${courseId}`);
-  return { ok: true, message: "Informations enregistrées ✅" };
+  return { ok: true, message: "Informations enregistrées" };
 }
 
 export async function addChapter(courseId: string, title: string) {
@@ -241,7 +256,7 @@ export async function saveQuiz(courseId: string, target: { quizId?: string; isFi
 export async function submitCourse(courseId: string) {
   const { user, course } = await ownCourse(courseId);
   const lessons = await db.lesson.count({ where: { chapter: { courseId } } });
-  if (lessons < 3) return { error: "Ajoute au moins 3 leçons avant de publier." };
+  if (lessons < 3) return { error: "Ajoutez au moins 3 leçons avant de publier." };
   if (course.certified) {
     const final = await db.quiz.findFirst({ where: { courseId, isFinal: true }, include: { _count: { select: { questions: true } } } });
     if (!final || final._count.questions < 3) return { error: "Un cours certifiant nécessite un examen final d'au moins 3 questions." };
@@ -250,7 +265,7 @@ export async function submitCourse(courseId: string) {
   await db.course.update({ where: { id: courseId }, data: direct ? { status: "PUBLISHED", publishedAt: course.publishedAt ?? new Date() } : { status: "PENDING" } });
   if (!direct) {
     const admins = await db.user.findMany({ where: { role: "ADMIN" }, select: { id: true } });
-    await db.notification.createMany({ data: admins.map((a) => ({ userId: a.id, title: "Cours à valider", body: `« ${course.title} » attend ta validation.`, emoji: "📥", href: "/admin/courses?status=PENDING" })) });
+    await db.notification.createMany({ data: admins.map((a) => ({ userId: a.id, title: "Cours à valider", body: `« ${course.title} » attend votre validation.`, icon: "inbox", href: "/admin/courses?status=PENDING" })) });
   }
   revalidatePath(`/studio/courses/${courseId}`);
   revalidatePath("/studio");

@@ -1,7 +1,7 @@
 export const CURRENCIES = {
-  XAF: { label: "FCFA", name: "Franc CFA", rate: 1, decimals: 0, flag: "🌍" },
-  EUR: { label: "€", name: "Euro", rate: 655.957, decimals: 2, flag: "🇪🇺" },
-  USD: { label: "$", name: "Dollar US", rate: 600, decimals: 2, flag: "🇺🇸" },
+  XAF: { label: "FCFA", name: "Franc CFA", rate: 1, decimals: 0 },
+  EUR: { label: "€", name: "Euro", rate: 655.957, decimals: 2 },
+  USD: { label: "$", name: "Dollar US", rate: 600, decimals: 2 },
 } as const;
 
 export type Currency = keyof typeof CURRENCIES;

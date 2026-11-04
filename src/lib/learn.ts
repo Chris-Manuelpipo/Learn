@@ -6,7 +6,7 @@ export const getLearnContext = cache(async (slug: string, userId: string) => {
   const course = await db.course.findUnique({
     where: { slug },
     include: {
-      instructor: { select: { id: true, name: true, avatarEmoji: true, avatarColor: true, avatarUrl: true, instructorVerified: true } },
+      instructor: { select: { id: true, name: true, avatarColor: true, avatarUrl: true, instructorVerified: true } },
       chapters: {
         orderBy: { position: "asc" },
         include: { lessons: { orderBy: { position: "asc" }, select: { id: true, title: true, type: true, durationMinutes: true, chapterId: true } } },

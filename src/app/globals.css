@@ -59,36 +59,25 @@
   --color-lime: #7fd94c;
 
   --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque Variable", "Plus Jakarta Sans Variable", ui-sans-serif, sans-serif;
+  --font-display: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
   --radius-3xl: 1.75rem;
 
-  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.06), 0 8px 24px -6px hsl(var(--shadow-color) / 0.12);
-  --shadow-pop: 0 2px 4px hsl(var(--shadow-color) / 0.08), 0 20px 48px -12px hsl(var(--shadow-color) / 0.28);
+  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.05), 0 4px 14px -6px hsl(var(--shadow-color) / 0.08);
+  --shadow-pop: 0 2px 6px hsl(var(--shadow-color) / 0.06), 0 16px 40px -14px hsl(var(--shadow-color) / 0.22);
 
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-wiggle: wiggle 0.6s ease-in-out;
   --animate-shimmer: shimmer 2.2s linear infinite;
-  --animate-pop: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-pop: pop 0.18s ease-out;
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-    50% { transform: translateY(-10px) rotate(var(--r, 0deg)); }
-  }
-  @keyframes wiggle {
-    0%, 100% { transform: rotate(0); }
-    25% { transform: rotate(-8deg); }
-    75% { transform: rotate(8deg); }
-  }
   @keyframes shimmer {
     from { background-position: -200% 0; }
     to { background-position: 200% 0; }
   }
   @keyframes pop {
-    0% { transform: scale(0.6); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    from { transform: scale(0.97); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
   }
 }
 
@@ -104,8 +93,7 @@
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4 {
-    font-family: "Bricolage Grotesque Variable", "Plus Jakarta Sans Variable", ui-sans-serif, sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
   p {
@@ -127,20 +115,6 @@
 }
 
 @layer components {
-  /* Bouton « chunky » : une ombre pleine sous le bouton qui s'enfonce au clic. */
-  .btn-chunky {
-    box-shadow: 0 4px 0 0 var(--chunk);
-    transform: translateY(0);
-    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
-  }
-  .btn-chunky:hover {
-    filter: brightness(1.06);
-  }
-  .btn-chunky:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 0 var(--chunk);
-  }
-
   .card {
     background: var(--surface);
     border: 1px solid var(--line);
@@ -151,21 +125,6 @@
   .bg-dots {
     background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
     background-size: 22px 22px;
-  }
-
-  .text-gradient {
-    background: linear-gradient(100deg, var(--brand) 0%, var(--text-grad-b) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .squiggle {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5 T 30 5 T 40 5' fill='none' stroke='%23FFC23D' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: repeat-x;
-    background-position: 0 100%;
-    background-size: 40px 10px;
-    padding-bottom: 0.15em;
   }
 
   .skeleton {
@@ -226,7 +185,6 @@
   height: 0.55rem;
   border-radius: 999px;
   background: var(--brand);
-  box-shadow: 0 0 0 4px var(--brand-soft);
 }
 .lesson-prose ol {
   list-style: decimal;
@@ -246,15 +204,10 @@
 .lesson-prose blockquote {
   margin: 1.5rem 0;
   padding: 1rem 1.25rem;
-  border-radius: 1.25rem;
-  background: linear-gradient(135deg, #fff6dc, #ffecf3);
-  color: #5a4220;
-  border: 1px solid #ffe2a8;
-}
-.dark .lesson-prose blockquote {
-  background: linear-gradient(135deg, #2b2312, #2b1626);
-  color: #ffe6b0;
-  border-color: #4a3a17;
+  border-radius: 0.75rem;
+  background: var(--brand-soft);
+  color: var(--ink-soft);
+  border-left: 3px solid var(--brand);
 }
 .lesson-prose code {
   font-size: 0.9em;

@@ -17,14 +17,14 @@ export async function processPayment(input: {
   details: Record<string, string>;
 }): Promise<{ error?: string; reference?: string; reward?: Reward | null }> {
   const user = await getCurrentUser();
-  if (!user) return { error: "Session expirée, reconnecte-toi." };
+  if (!user) return { error: "Votre session a expiré, veuillez vous reconnecter." };
   const course = await db.course.findUnique({ where: { id: input.courseId } });
-  if (!course || course.status !== "PUBLISHED") return { error: "Cours introuvable." };
+  if (!course || course.status !== "PUBLISHED") return { error: "Formation introuvable." };
   if (!METHODS.includes(input.method as PaymentMethod)) return { error: "Moyen de paiement invalide." };
   const currency = isCurrency(input.currency) ? input.currency : "XAF";
 
   const already = await db.enrollment.findUnique({ where: { userId_courseId: { userId: user.id, courseId: course.id } } });
-  if (already) return { error: "Tu es déjà inscrit à ce cours." };
+  if (already) return { error: "Vous êtes déjà inscrit à cette formation." };
 
   // Validation simulée des coordonnées.
   const d = input.details;
@@ -49,7 +49,7 @@ export async function processPayment(input: {
   });
   const reward = await enrollUser(user.id, course.id, course.title);
   await db.notification.create({
-    data: { userId: user.id, title: "Paiement confirmé ✅", body: `Tu as maintenant accès à « ${course.title} ». Bon apprentissage !`, emoji: "🧾", href: `/learn/${course.slug}` },
+    data: { userId: user.id, title: "Paiement confirmé", body: `Vous avez désormais accès à « ${course.title} ».`, icon: "receipt", href: `/learn/${course.slug}` },
   });
   return { reference, reward };
 }

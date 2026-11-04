@@ -13,7 +13,7 @@ import { enrollUser } from "@/lib/enroll";
 
 export async function toggleFavorite(courseId: string) {
   const user = await getCurrentUser();
-  if (!user) return { error: "Connecte-toi pour ajouter des favoris.", favorite: false };
+  if (!user) return { error: "Connectez-vous pour ajouter des favoris.", favorite: false };
   const key = { userId_courseId: { userId: user.id, courseId } };
   const existing = await db.favorite.findUnique({ where: key });
   if (existing) await db.favorite.delete({ where: key });
@@ -34,11 +34,11 @@ export async function enrollFree(courseId: string) {
 
 export async function submitReview(courseId: string, rating: number, comment: string): Promise<{ error?: string; reward?: Reward }> {
   const user = await getCurrentUser();
-  if (!user) return { error: "Connecte-toi pour laisser un avis." };
-  if (rating < 1 || rating > 5) return { error: "Choisis une note entre 1 et 5." };
-  if (comment.trim().length < 10) return { error: "Ton avis doit faire au moins 10 caractères." };
+  if (!user) return { error: "Connectez-vous pour laisser un avis." };
+  if (rating < 1 || rating > 5) return { error: "Choisissez une note entre 1 et 5." };
+  if (comment.trim().length < 10) return { error: "Votre avis doit faire au moins 10 caractères." };
   const enrolled = await db.enrollment.findUnique({ where: { userId_courseId: { userId: user.id, courseId } } });
-  if (!enrolled) return { error: "Inscris-toi au cours pour pouvoir le noter." };
+  if (!enrolled) return { error: "Inscrivez-vous à la formation pour la noter." };
 
   const key = { userId_courseId: { userId: user.id, courseId } };
   const existing = await db.review.findUnique({ where: key });

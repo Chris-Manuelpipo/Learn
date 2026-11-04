@@ -22,15 +22,15 @@ export async function reviewApplication(id: string, approve: boolean, note?: str
   }
   await db.notification.create({
     data: approve
-      ? { userId: app.userId, title: "Bienvenue parmi les formateurs ! 🎉", body: "Ta candidature est acceptée et tu as reçu le badge « Formateur certifié ». Ouvre le studio pour créer ton premier cours.", emoji: "🧑‍🏫", href: "/studio" }
-      : { userId: app.userId, title: "Candidature formateur", body: note?.trim() || "Ta candidature n'a pas été retenue cette fois-ci. Tu peux en soumettre une nouvelle.", emoji: "📩", href: "/become-instructor" },
+      ? { userId: app.userId, title: "Candidature acceptée", body: "Vous êtes désormais formateur certifié. Ouvrez le studio pour créer votre première formation.", icon: "user-check", href: "/studio" }
+      : { userId: app.userId, title: "Candidature formateur", body: note?.trim() || "Votre candidature n'a pas été retenue. Vous pouvez en soumettre une nouvelle.", icon: "inbox", href: "/become-instructor" },
   });
   revalidatePath("/admin", "layout");
 }
 
 export async function setUserRole(userId: string, role: Role) {
   const me = await admin();
-  if (userId === me.id) return { error: "Tu ne peux pas modifier ton propre rôle." };
+  if (userId === me.id) return { error: "Vous ne pouvez pas modifier votre propre rôle." };
   await db.user.update({ where: { id: userId }, data: { role, ...(role === "STUDENT" ? { instructorVerified: false } : {}) } });
   revalidatePath("/admin/users");
 }
@@ -40,7 +40,7 @@ export async function toggleVerified(userId: string) {
   const u = await db.user.findUniqueOrThrow({ where: { id: userId } });
   await db.user.update({ where: { id: userId }, data: { instructorVerified: !u.instructorVerified } });
   if (!u.instructorVerified) {
-    await db.notification.create({ data: { userId, title: "Tu es formateur certifié ✅", body: "Le badge apparaît désormais sur tous tes cours.", emoji: "✅", href: "/studio" } });
+    await db.notification.create({ data: { userId, title: "Formateur certifié", body: "Le badge apparaît désormais sur toutes vos formations.", icon: "user-check", href: "/studio" } });
   }
   revalidatePath("/admin/users");
 }
@@ -52,9 +52,9 @@ export async function setCourseStatus(courseId: string, status: CourseStatus) {
     await db.notification.create({
       data: {
         userId: course.instructorId,
-        title: status === "PUBLISHED" ? "Ton cours est en ligne 🚀" : "Ton cours nécessite des modifications",
+        title: status === "PUBLISHED" ? "Votre formation est en ligne" : "Votre formation nécessite des modifications",
         body: `« ${course.title} » ${status === "PUBLISHED" ? "a été validé et publié." : "a été repassé en brouillon par l'équipe."}`,
-        emoji: status === "PUBLISHED" ? "🚀" : "✏️",
+        icon: status === "PUBLISHED" ? "rocket" : "pencil",
         href: `/studio/courses/${course.id}`,
       },
     });
