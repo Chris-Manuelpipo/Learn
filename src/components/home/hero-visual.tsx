@@ -63,7 +63,7 @@ export function HeroVisual({ photo, instructorPhoto }: { photo: string; instruct
               <Flame className="h-[18px] w-[18px]" />
             </span>
             <div>
-              <p className="text-lg font-bold leading-none">12 jours</p>
+              <p className="whitespace-nowrap text-base font-bold leading-none sm:text-lg">12 jours</p>
               <p className="mt-1 text-[11px] text-muted">de série</p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export function HeroVisual({ photo, instructorPhoto }: { photo: string; instruct
       </motion.div>
 
       {/* Quiz */}
-      <motion.div {...enter(0.4)} className="absolute right-[2%] top-[42%] w-[42%]">
+      <motion.div {...enter(0.4)} className="absolute right-[2%] top-[42%] hidden w-[42%] sm:block">
         <div className="card p-4">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">Quiz · 3 sur 5</p>
           <p className="mt-1.5 text-[13px] font-semibold leading-snug">À quoi sert le hook useState ?</p>
@@ -108,7 +108,7 @@ export function HeroVisual({ photo, instructorPhoto }: { photo: string; instruct
       </motion.div>
 
       {/* Technologies enseignées */}
-      <motion.div {...enter(0.7)} className="absolute bottom-[10%] right-[6%]">
+      <motion.div {...enter(0.7)} className="absolute bottom-[10%] right-[6%] hidden sm:block">
         <div className="card flex items-center gap-3 py-2.5 pl-2.5 pr-4">
           <div className="flex -space-x-2">
             {[LOGOS.react, LOGOS.python, LOGOS.figma, LOGOS.javascript].map((logo) => (

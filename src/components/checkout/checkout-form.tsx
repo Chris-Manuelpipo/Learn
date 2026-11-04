@@ -206,7 +206,7 @@ export function CheckoutForm({ course, initialCurrency, user }: { course: Course
               </div>
             </div>
             <div className="mt-4 space-y-2 text-sm">
-              <Row k="Prix du cours" v={price} />
+              <Row k="Prix de la formation" v={price} />
               <Row k="Frais" v="0" />
               <div className="flex items-center justify-between border-t border-dashed border-line pt-3">
                 <span className="font-bold">Total</span>

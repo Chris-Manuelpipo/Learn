@@ -44,7 +44,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         </div>
         <div className="inline-flex rounded-xl bg-surface-2 p-1">
           {PERIODS.map(([k, l]) => (
-            <Link key={k} href={`/leaderboard?period=${k}`} className={cn("rounded-lg px-3.5 py-2 text-sm font-medium transition", period === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink")}>
+            <Link key={k} href={`/leaderboard?period=${k}`} className={cn("whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium transition", period === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink")}>
               {l}
             </Link>
           ))}

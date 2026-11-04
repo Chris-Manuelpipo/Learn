@@ -114,7 +114,7 @@ export default async function CoursePage({ params }: Props) {
             <Link href={`/u/${course.instructor.username}`} className="mt-6 inline-flex items-center gap-3 rounded-2xl bg-white/10 py-2 pl-2 pr-4 transition hover:bg-white/15">
               <Avatar user={course.instructor} size={40} />
               <span className="text-sm">
-                <span className="block text-white/60">Formateur</span>
+                <span className="block text-white/60">Animée par</span>
                 <span className="flex items-center gap-1 font-bold">
                   {course.instructor.name}
                   {course.instructor.instructorVerified && <BadgeCheck className="h-4 w-4 text-brand-2" />}

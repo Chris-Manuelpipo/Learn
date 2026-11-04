@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 // Polices auto-hébergées : le build ne dépend pas de Google Fonts.
-import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/plus-jakarta-sans";
 import { Providers } from "@/components/layout/providers";
 import { DEFAULT_PALETTE, PALETTE_COOKIE, isPaletteName, paletteCss } from "@/lib/palettes";
