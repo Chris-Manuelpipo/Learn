@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { getCurrency } from "@/lib/currency-server";
 import { levelInfo, leagueFor } from "@/lib/gamification";
 import { dailyActivity, dayKey, leaderboard, startOfWeek, weeklyRank } from "@/lib/stats";
-import { cn, formatNumber } from "@/lib/utils";
+import { cn, formatDate, formatNumber } from "@/lib/utils";
 import { Container } from "@/components/ui/section";
 import { Avatar } from "@/components/ui/avatar";
 import { ProgressBar, ProgressRing } from "@/components/ui/progress";
@@ -31,13 +31,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const { welcome } = await searchParams;
   const currency = await getCurrency();
 
-  const [enrollments, certCount, badges, badgeOwned, badgeTotal, activity, rank, weekTop] = await Promise.all([
+  const [enrollments, certificates, badges, badgeOwned, badgeTotal, activity, rank, weekTop] = await Promise.all([
     db.enrollment.findMany({
       where: { userId: user.id },
       orderBy: { lastAccessAt: "desc" },
       include: { course: { select: { ...courseCardSelect, chapters: { orderBy: { position: "asc" }, select: { title: true, lessons: { orderBy: { position: "asc" }, select: { id: true, title: true } } } } } } },
     }),
-    db.certificate.count({ where: { userId: user.id } }),
+    db.certificate.findMany({ where: { userId: user.id }, select: { courseId: true, code: true, score: true } }),
     db.userBadge.findMany({ where: { userId: user.id }, include: { badge: true }, orderBy: { earnedAt: "desc" }, take: 6 }),
     db.userBadge.count({ where: { userId: user.id } }),
     db.badge.count(),
@@ -50,6 +50,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const today = activity[activity.length - 1];
   const goalPct = Math.min(100, Math.round((today.minutes / user.dailyGoalMinutes) * 100));
   const inProgress = enrollments.filter((e) => e.progress < 100);
+  const certCount = certificates.length;
+  const certByCourse = new Map(certificates.map((c) => [c.courseId, c]));
+  const completed = enrollments.filter((e) => e.completedAt).sort((a, b) => b.completedAt!.getTime() - a.completedAt!.getTime());
   const current = inProgress[0] ?? enrollments[0];
   const league = leagueFor(rank.xp);
   const first = user.name.split(" ")[0];
@@ -199,7 +202,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   <h2 className="mt-1 text-xl font-bold leading-tight">{current.course.title}</h2>
                   {nextLesson && (
                     <p className="mt-2 text-sm text-muted">
-                      {nextLesson.chapter} · <span className="text-ink-soft">{nextLesson.title}</span>
+                      {nextLesson.chapter}
+                      {nextLesson.title !== nextLesson.chapter && (
+                        <>
+                          {" · "}
+                          <span className="text-ink-soft">{nextLesson.title}</span>
+                        </>
+                      )}
                     </p>
                   )}
                   <div className="mt-auto pt-5">
@@ -241,6 +250,48 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 {inProgress.slice(1, 4).map((e) => (
                   <CourseCard key={e.id} course={e.course} currency={currency} progress={e.progress} href={`/learn/${e.course.slug}`} />
                 ))}
+              </div>
+            </section>
+          )}
+
+          {/* TERMINÉES */}
+          {completed.length > 0 && (
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold">
+                  Formations terminées <span className="text-base font-medium text-muted">· {completed.length}</span>
+                </h2>
+                <Link href="/my-courses?tab=done" className="text-sm font-semibold text-brand-ink hover:underline">
+                  Tout voir
+                </Link>
+              </div>
+              <div className="card divide-y divide-line">
+                {completed.slice(0, 4).map((e) => {
+                  const cert = certByCourse.get(e.courseId);
+                  return (
+                    <div key={e.id} className="flex items-center gap-4 p-4">
+                      <CourseCover course={e.course} size="sm" className="h-14 w-20 shrink-0 rounded-xl" />
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/courses/${e.course.slug}`} className="block truncate font-semibold hover:text-brand-ink">
+                          {e.course.title}
+                        </Link>
+                        <p className="text-sm text-muted">
+                          Terminée le {formatDate(e.completedAt!, { day: "numeric", month: "long", year: "numeric" })}
+                          {cert ? ` · examen réussi à ${cert.score} %` : " · formation non certifiante"}
+                        </p>
+                      </div>
+                      {cert ? (
+                        <Link href={`/certificates/${cert.code}`} className={buttonClass("secondary", "sm", "shrink-0")}>
+                          <GraduationCap className="h-4 w-4" /> <span className="hidden sm:inline">Certificat</span>
+                        </Link>
+                      ) : (
+                        <Link href={`/learn/${e.course.slug}`} className={buttonClass("ghost", "sm", "shrink-0")}>
+                          Revoir
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </section>
           )}

@@ -111,6 +111,26 @@ Lisez d'abord cette fiche une première fois sans prendre de notes. Fermez-la en
 Appliquez dès aujourd'hui ce que vous venez d'apprendre sur un petit exemple personnel. Dix minutes de pratique suffisent pour ancrer durablement la leçon.`;
 }
 
+type Method = "CARD" | "ORANGE_MONEY" | "MTN_MOMO" | "PAYPAL";
+
+// Parcours de l'étudiant de démo : [formation, commencée il y a N jours, avis laissé, moyen de paiement]
+const DEMO_COMPLETED: [string, number, boolean, Method?][] = [
+  ["anglais-les-bases-pour-debutants", 150, true],
+  ["html-css-creer-votre-premier-site", 120, true],
+  ["git-github-sans-prise-de-tete", 100, false],
+  ["javascript-moderne-de-zero", 85, true, "MTN_MOMO"],
+  ["apprendre-a-apprendre", 60, true],
+  ["ux-design-les-fondamentaux", 48, false, "ORANGE_MONEY"],
+  ["sql-interroger-les-bases-de-donnees", 32, true, "CARD"],
+];
+// [formation, progression %, commencée il y a N jours, moyen de paiement]
+const DEMO_IN_PROGRESS: [string, number, number, Method?][] = [
+  ["react-19-interfaces-reactives", 60, 25, "MTN_MOMO"],
+  ["ia-generative-et-prompt-engineering", 40, 18, "ORANGE_MONEY"],
+  ["figma-de-a-a-z", 25, 12, "ORANGE_MONEY"],
+  ["python-les-fondamentaux", 10, 4],
+];
+
 async function main() {
   console.log("Nettoyage…");
   await db.$transaction([
@@ -472,17 +492,18 @@ async function main() {
 
   // Compte de démonstration étudiant, avec un parcours réaliste.
   const bySlug = (s: string) => courses.find((c) => c.slug === s)!;
-  enroll(demo.id, bySlug("apprendre-a-apprendre"), 100, 40, { review: true });
-  enroll(demo.id, bySlug("react-19-interfaces-reactives"), 60, 25, { review: false, method: "MTN_MOMO" });
-  enroll(demo.id, bySlug("figma-de-a-a-z"), 25, 12, { review: false, method: "ORANGE_MONEY" });
-  enroll(demo.id, bySlug("python-les-fondamentaux"), 10, 4, { review: false });
-  enroll(demo.id, bySlug("html-css-creer-votre-premier-site"), 100, 35, { review: true });
+  // Sept formations terminées sur plusieurs mois (six certificats : Git est gratuite et non certifiante), quatre en cours.
+  for (const [slug, startedDaysAgo, review, method] of DEMO_COMPLETED) enroll(demo.id, bySlug(slug), 100, startedDaysAgo, { review, method });
+  for (const [slug, progress, startedDaysAgo, method] of DEMO_IN_PROGRESS) enroll(demo.id, bySlug(slug), progress, startedDaysAgo, { review: false, method });
   for (let d = 0; d < 6; d++) {
     activityRows.push({ id: id(), userId: demo.id, type: "lesson", label: "Leçon terminée", xp: 30, minutes: int(12, 28), createdAt: daysAgo(d) });
     xpByUser.set(demo.id, (xpByUser.get(demo.id) ?? 0) + 30);
   }
   await db.user.update({ where: { id: demo.id }, data: { xp: xpByUser.get(demo.id) ?? 0, streak: 6, bestStreak: 11, lastActiveDate: daysAgo(1) } });
-  for (const slug of ["enrolled", "first-step", "collector", "streak-3", "finisher", "certified", "critic", "quiz-ace", "night-owl", "level-5", "xp-1000"]) {
+  const demoXp = xpByUser.get(demo.id) ?? 0;
+  const demoBadges = ["enrolled", "first-step", "collector", "streak-3", "finisher", "certified", "triple-cert", "critic", "quiz-ace", "quiz-10", "night-owl", "level-5", "xp-1000"];
+  if (Math.floor(Math.sqrt(demoXp / 50)) + 1 >= 10) demoBadges.push("level-10");
+  for (const slug of demoBadges) {
     userBadgeRows.push({ userId: demo.id, badgeId: badgeBySlug[slug].id, earnedAt: daysAgo(int(1, 40)) });
   }
 
@@ -509,7 +530,7 @@ async function main() {
 
   console.log("Favoris, notes, notifications, candidatures…");
   await db.favorite.createMany({
-    data: ["ux-design-les-fondamentaux", "next-js-le-framework-full-stack", "ia-generative-et-prompt-engineering"].map((s) => ({ userId: demo.id, courseId: bySlug(s).id })),
+    data: ["next-js-le-framework-full-stack", "design-system-penser-a-l-echelle", "machine-learning-premiers-modeles"].map((s) => ({ userId: demo.id, courseId: bySlug(s).id })),
   });
   const reactLessons = bySlug("react-19-interfaces-reactives").lessons;
   await db.note.createMany({
