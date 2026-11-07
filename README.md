@@ -2,6 +2,75 @@
 
 Cours vidéo, chapitres, quiz, progression, certificats vérifiables et gamification (XP, niveaux, séries de jours, badges, classement). Interface en français, sobre et professionnelle, pensée pour apprendre à son rythme.
 
+![Page d'accueil de Learn](docs/captures/accueil.png)
+
+## Aperçu
+
+### Un tableau de bord qui donne envie de revenir
+
+Série de jours, niveau et XP, objectif quotidien, reprise de la formation en cours en un clic et ligue hebdomadaire.
+
+![Tableau de bord étudiant](docs/captures/tableau-de-bord.png)
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/tableau-de-bord-sombre.png" alt="Tableau de bord en thème sombre"><p align="center"><sub>Thème sombre natif</sub></p></td>
+    <td width="50%"><img src="docs/captures/badges.png" alt="Badges et progression"><p align="center"><sub>18 badges à débloquer, chacun rapporte de l'XP</sub></p></td>
+  </tr>
+</table>
+
+### Trouver la bonne formation
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/catalogue.png" alt="Catalogue des formations"><p align="center"><sub>Catalogue : recherche, catégories, filtres et tri</sub></p></td>
+    <td width="50%"><img src="docs/captures/page-cours.png" alt="Page d'une formation"><p align="center"><sub>Page formation : programme, avis, formateur, paiement</sub></p></td>
+  </tr>
+</table>
+
+### Apprendre, puis vérifier ce qu'on a retenu
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/lecteur.png" alt="Lecteur de cours"><p align="center"><sub>Lecteur immersif : programme, vidéo, résumé et notes horodatées</sub></p></td>
+    <td width="50%"><img src="docs/captures/quiz.png" alt="Quiz de chapitre"><p align="center"><sub>Quiz de fin de chapitre, utilisable au clavier</sub></p></td>
+  </tr>
+</table>
+
+### Des certificats qui se vérifient
+
+Chaque certificat porte un code unique et un QR code menant à une page publique de vérification. Export PDF et ajout à LinkedIn en un clic.
+
+![Certificat de réussite](docs/captures/certificat.png)
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/certificats.png" alt="Liste des certificats"><p align="center"><sub>Tous les certificats obtenus</sub></p></td>
+    <td width="50%"><img src="docs/captures/verification-certificat.png" alt="Page publique de vérification"><p align="center"><sub>Page publique <code>/verify/&lt;code&gt;</code></sub></p></td>
+  </tr>
+</table>
+
+### Classement et émulation
+
+![Classement hebdomadaire](docs/captures/classement.png)
+
+### Pensé pour le mobile
+
+<p align="center">
+  <img src="docs/captures/mobile-tableau-de-bord.png" alt="Tableau de bord sur mobile" width="280">
+  &nbsp;&nbsp;
+  <img src="docs/captures/mobile-page-cours.png" alt="Page formation sur mobile" width="280">
+</p>
+
+### Côté formateurs et administration
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/studio.png" alt="Studio formateur"><p align="center"><sub>Studio formateur : formations, apprenants, revenus, avis</sub></p></td>
+    <td width="50%"><img src="docs/captures/admin.png" alt="Centre de contrôle administrateur"><p align="center"><sub>Administration : revenus, moyens de paiement, modération</sub></p></td>
+  </tr>
+</table>
+
 ## Démarrage rapide
 
 Prérequis : Node.js 20+, Docker.
@@ -24,7 +93,7 @@ Mot de passe commun : `Learn2026!` (boutons de remplissage rapide sur la page de
 
 | Rôle | Email | Ce qu'on peut tester |
 |---|---|---|
-| Étudiant | `etudiant@learn.dev` | Tableau de bord, 5 cours en cours ou terminés, 2 certificats, badges, notes |
+| Étudiant | `etudiant@learn.dev` | Tableau de bord, 11 formations dont 7 terminées, 6 certificats, 14 badges, notes |
 | Formateur certifié | `formateur@learn.dev` | Studio : créer et éditer des cours, chapitres, leçons, quiz, examen final, publication |
 | Admin | `admin@learn.dev` | Statistiques, validation des candidatures formateur et des cours, utilisateurs, paiements |
 
@@ -68,8 +137,8 @@ src/components/    UI, cours, lecteur, studio, admin…
 
 ## Versions
 
-- `main` et le tag `v1-avant-refonte` : première version (style ludique, emojis).
-- Branche `refonte-visuelle` : version professionnelle actuelle.
+- `main` : version professionnelle actuelle.
+- Tag `v1-avant-refonte` : première version (style ludique, emojis).
 
 ## Commandes utiles
 
